@@ -51,7 +51,6 @@ public class ReplyServiceImpl implements ReplyService {
 
         Reply savedReply = replyRepository.save(reply);
         eventPublisher.publishEvent(new ReplySyncEvent(savedReply.getId(), "CREATE_OR_UPDATE"));
-
     }
 
     // 게시글 내의 댓글 리스트 (동시성)

@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 @Service
@@ -21,6 +23,7 @@ public class PostServiceImpl implements PostService {
     @Autowired private PostRepository postRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private ApplicationEventPublisher eventPublisher;
+    @Autowired private ImageService imageService;
 
     // 게시글 가져 오기
     @Override
@@ -29,6 +32,43 @@ public class PostServiceImpl implements PostService {
     }
 
     // 게시글 작성 (postEs로 post 전달)
+    // 이미지 o
+    @Transactional
+    @Override
+    public void createPost(Long userId, PostDto postDto, List<MultipartFile> images) throws IOException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new  ExpectedException(ErrorCode.USER_NOT_FOUND));
+
+        if (postDto.getCategory().equals(Category.NEWS) && user.getRole().equals(Role.USER)) {
+            throw new ExpectedException(ErrorCode.ACCESS_DENIED);
+        }
+
+        Post post = Post.builder()
+                .user(user).title(postDto.getTitle()).content(postDto.getContent())
+                .category(postDto.getCategory()).status(BlockStatus.NORMAL_STATUS)
+                .viewCount(0).likeCount(0)
+                .build();
+
+        if (!postDto.getImages().isEmpty()) {
+            for (ImageDto imageDto : postDto.getImages()) {
+                if (!isValidImageFormat(imageDto)) {
+                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
+                }
+            }
+        }
+
+        List<Image> img = convertImageDtosToImages(postDto.getImages(), post);
+        for (Image image: img) {
+            post.addImage(image);
+        }
+        imageService.uploadImage(post, images);
+
+        Post savedPost = postRepository.save(post);
+        eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
+    }
+
+    // 이미지 x
+    // 게시글 작성
+    /*
     @Transactional
     @Override
     public void createPost(Long userId, PostDto postDto) {
@@ -59,8 +99,8 @@ public class PostServiceImpl implements PostService {
 
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
-
     }
+     */
 
     // 이미지 형식 확인
     private boolean isValidImageFormat(ImageDto imageDto) {
@@ -81,6 +121,41 @@ public class PostServiceImpl implements PostService {
     }
 
     // 게시글 수정 (postEs로 post 전달)
+    // 이미지 o
+    @Transactional
+    @Override
+    public void updatePost(Long id, User user, UpdateDto updateDto, List<MultipartFile> images) throws IOException {
+        Post post = findPostById(id);
+
+        if (post.getStatus() == BlockStatus.BLOCK_STATUS) {
+            throw new  ExpectedException(ErrorCode.REPLY_BLOCKED);
+        }
+
+        List<Image> updatedImages = convertImageDtosToImages(updateDto.getImages(), post);
+        for (Image image: updatedImages) {
+            post.addImage(image);
+        }
+        imageService.uploadImage(post, images);
+
+        post.setTitle(updateDto.getTitle());
+        post.setContent(updateDto.getContent());
+        post.setImages(updatedImages);
+
+        if (!updateDto.getImages().isEmpty()) {
+            for (ImageDto imageDto : updateDto.getImages()) {
+                if (!isValidImageFormat(imageDto)) {
+                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
+                }
+            }
+        }
+
+        Post savedPost = postRepository.save(post);
+        eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
+    }
+
+    // 이미지 x
+    // 게시글 수정
+    /*
     @Transactional
     @Override
     public void updatePost(Long id, User user, UpdateDto updateDto) {
@@ -107,6 +182,7 @@ public class PostServiceImpl implements PostService {
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
     }
+     */
 
     // 게시글 삭제
     @Transactional

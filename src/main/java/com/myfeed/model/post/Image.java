@@ -24,4 +24,9 @@ public class Image {
 
     @Column(name = "image_src", nullable = false)
     private String imageSrc;
+
+    public Image(Post post, String imageSrc) {
+        this.post = post;
+        this.imageSrc = imageSrc;
+    }
 }

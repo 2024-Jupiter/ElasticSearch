@@ -19,7 +19,7 @@ public class PostDetailDto {
     private String title;
     private String content;
     private Category category;
-    private List<ImageDto> images = new ArrayList<>();
+    private List<String> images = new ArrayList<>();
     private int viewCount;
     private int likeCount;
     private LocalDateTime earliestTime;
@@ -36,7 +36,6 @@ public class PostDetailDto {
                 : post.getUpdatedAt();
 
         this.images = post.getImages().stream()
-                .map(image -> new ImageDto(image.getImageSrc()))  // ImageDto 생성
-                .collect(Collectors.toList());
+                .map(Image::getImageSrc).toList();
     }
 }

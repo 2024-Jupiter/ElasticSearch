@@ -20,7 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +43,31 @@ public class PostController {
     }
 
     // 게시글 작성
+    // 이미지 o
+    @ResponseBody
+    @PostMapping("create")
+    public ResponseEntity<Map<String, Object>> createPost(@PathVariable Long id, @CurrentUser User user,
+                                                          @Valid @RequestParam("images") List<MultipartFile> images,
+                                                          @Valid @RequestBody PostDto postDto) throws IOException {
+        Post post = postService.findPostById(id);
+        if (!post.getUser().equals(user)) {
+            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
+        postService.createPost(user.getId(), postDto, images);
+        Map<String, Object> response = new HashMap<>();
+
+        String redirectUrl = "/api/posts/detail/" + id;
+        response.put("redirectUrl",redirectUrl);
+        response.put("success", true);
+        response.put("message", "게시글이 작성 되었습니다.");
+
+        return ResponseEntity.ok(response);
+    }
+
+    /*
+    // 이미지 x
+    // 게시글 작성
     @ResponseBody
     @PostMapping("create")
     public ResponseEntity<Map<String, Object>> createPost(@PathVariable Long id, @CurrentUser User user,
@@ -60,6 +87,7 @@ public class PostController {
 
         return ResponseEntity.ok(response);
     }
+     */
 
     // 내 게시글 페이지 네이션
     @ResponseBody
@@ -158,6 +186,31 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    // 이미지 o
+    // 게시글 수정
+    @ResponseBody
+    @PatchMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id, @CurrentUser User user,
+                                                          @Valid @RequestParam("images") List<MultipartFile> images,
+                                                          @Valid @RequestBody UpdateDto updateDto) throws IOException {
+        Post post = postService.findPostById(id);
+        if (!post.getUser().equals(user)) {
+            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
+        postService.updatePost(id, user, updateDto, images);
+        Map<String, Object> response = new HashMap<>();
+
+        String redirectUrl = "/api/posts/detail/" + id;
+        response.put("redirectUrl",redirectUrl);
+        response.put("success", true);
+        response.put("message", "게시글이 수정 되었습니다.");
+
+        return ResponseEntity.ok(response);
+    }
+
+    /*
+    // 이미지 x
     // 게시글 수정
     @ResponseBody
     @PatchMapping("/{id}")
@@ -179,6 +232,7 @@ public class PostController {
 
         return ResponseEntity.ok(response);
     }
+     */
 
     // 게시글 삭제
     @ResponseBody
