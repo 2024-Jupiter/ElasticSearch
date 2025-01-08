@@ -42,7 +42,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .formLogin(auth -> auth
-                        .loginPage("/api/users/custom-login") // template return url users/loginPage
+                        .loginPage("/api/users/test") // template return url users/loginPage
                         .loginProcessingUrl("/api/users/custom-login")  // post 엔드포인트
                         .usernameParameter("email")
                         .passwordParameter("pwd")
