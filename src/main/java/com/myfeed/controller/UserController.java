@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerProc(@Validated RegisterDto registerDto, Model model){
+    public String registerProc(@Validated @RequestBody RegisterDto registerDto, Model model){
         Map<String, Object> messagemap = new HashMap<>();
         userService.registerUser(registerDto);
         model.addAttribute("msg", "회원가입 되었습니다.");
