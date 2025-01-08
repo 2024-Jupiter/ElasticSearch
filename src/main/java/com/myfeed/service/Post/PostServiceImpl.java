@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService {
     // 이미지 o
     @Transactional
     @Override
-    public void createPost(Long userId, PostDto postDto, List<MultipartFile> images) throws IOException {
+    public void createPost(Long userId, PostDto postDto) throws IOException {
         User user = userRepository.findById(userId).orElseThrow(() -> new  ExpectedException(ErrorCode.USER_NOT_FOUND));
 
         if (postDto.getCategory().equals(Category.NEWS) && user.getRole().equals(Role.USER)) {
@@ -49,18 +49,9 @@ public class PostServiceImpl implements PostService {
                 .build();
 
         if (!postDto.getImages().isEmpty()) {
-            for (ImageDto imageDto : postDto.getImages()) {
-                if (!isValidImageFormat(imageDto)) {
-                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
-                }
-            }
+            validateImages(postDto.getImages());
+            imageService.uploadImage(post, postDto.getImages());
         }
-
-        List<Image> img = convertImageDtosToImages(postDto.getImages(), post);
-        for (Image image: img) {
-            post.addImage(image);
-        }
-        imageService.uploadImage(post, images);
 
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
@@ -102,6 +93,7 @@ public class PostServiceImpl implements PostService {
     }
      */
 
+    /*
     // 이미지 형식 확인
     private boolean isValidImageFormat(ImageDto imageDto) {
         String imageUrl = imageDto.getImageSrc();
@@ -119,34 +111,45 @@ public class PostServiceImpl implements PostService {
         }
         return images;
     }
+     */
+
+    // 이미지 형식 확인
+    private void validateImages(List<MultipartFile> images) {
+        for (MultipartFile file : images) {
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || !(originalFilename.toLowerCase().endsWith(".jpg")
+                    || originalFilename.toLowerCase().endsWith(".jpeg")
+                    || originalFilename.toLowerCase().endsWith(".png")
+                    || originalFilename.toLowerCase().endsWith(".gif"))) {
+                throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE); // 유효 하지 않은 확장자
+            }
+
+            String contentType = file.getContentType();
+            if (contentType == null || !(contentType.equalsIgnoreCase("image/jpeg")
+                    || contentType.equalsIgnoreCase("image/png")
+                    || contentType.equalsIgnoreCase("image/gif"))) {
+                throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE); // 유효 하지 않은 MIME 타입
+            }
+        }
+    }
 
     // 게시글 수정 (postEs로 post 전달)
     // 이미지 o
     @Transactional
     @Override
-    public void updatePost(Long id, User user, UpdateDto updateDto, List<MultipartFile> images) throws IOException {
+    public void updatePost(Long id, User user, UpdateDto updateDto) throws IOException {
         Post post = findPostById(id);
 
         if (post.getStatus() == BlockStatus.BLOCK_STATUS) {
             throw new  ExpectedException(ErrorCode.REPLY_BLOCKED);
         }
 
-        List<Image> updatedImages = convertImageDtosToImages(updateDto.getImages(), post);
-        for (Image image: updatedImages) {
-            post.addImage(image);
-        }
-        imageService.uploadImage(post, images);
-
         post.setTitle(updateDto.getTitle());
         post.setContent(updateDto.getContent());
-        post.setImages(updatedImages);
 
         if (!updateDto.getImages().isEmpty()) {
-            for (ImageDto imageDto : updateDto.getImages()) {
-                if (!isValidImageFormat(imageDto)) {
-                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
-                }
-            }
+            validateImages(updateDto.getImages());
+            imageService.updateImages(post, updateDto.getImages());
         }
 
         Post savedPost = postRepository.save(post);

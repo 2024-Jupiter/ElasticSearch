@@ -20,7 +20,7 @@ public class PostReportDto {
     private String content;
     private Category category;
     private UserDto userDto;
-    private List<ImageDto> images;
+    private List<String> images;
     private int viewCount;
     private int likeCount;
     private BlockStatus status;
@@ -34,8 +34,7 @@ public class PostReportDto {
         this.category = post.getCategory();
         this.userDto = new UserDto(post.getUser());
         this.images = post.getImages().stream()
-                .map(ImageDto::new)
-                .collect(Collectors.toList());
+                .map(Image::getImageSrc).toList();
         this.viewCount = post.getViewCount();
         this.likeCount = post.getLikeCount();
         this.status = post.getStatus();

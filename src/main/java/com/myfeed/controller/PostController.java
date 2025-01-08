@@ -47,14 +47,13 @@ public class PostController {
     @ResponseBody
     @PostMapping("create")
     public ResponseEntity<Map<String, Object>> createPost(@PathVariable Long id, @CurrentUser User user,
-                                                          @Valid @RequestParam("images") List<MultipartFile> images,
                                                           @Valid @RequestBody PostDto postDto) throws IOException {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
 
-        postService.createPost(user.getId(), postDto, images);
+        postService.createPost(user.getId(), postDto);
         Map<String, Object> response = new HashMap<>();
 
         String redirectUrl = "/api/posts/detail/" + id;
@@ -191,14 +190,13 @@ public class PostController {
     @ResponseBody
     @PatchMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id, @CurrentUser User user,
-                                                          @Valid @RequestParam("images") List<MultipartFile> images,
                                                           @Valid @RequestBody UpdateDto updateDto) throws IOException {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
 
-        postService.updatePost(id, user, updateDto, images);
+        postService.updatePost(id, user, updateDto);
         Map<String, Object> response = new HashMap<>();
 
         String redirectUrl = "/api/posts/detail/" + id;
