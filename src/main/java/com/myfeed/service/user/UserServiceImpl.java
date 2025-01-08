@@ -5,6 +5,8 @@ import com.myfeed.model.user.UpdateDto;
 import com.myfeed.model.user.User;
 import com.myfeed.repository.jpa.UserRepository;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
@@ -84,6 +86,17 @@ public class UserServiceImpl implements UserService {
         user.setDeleted(true);
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUserAccessToken(HttpServletResponse response) {
+        //탈퇴 시 쿠키 제거해 redirection 방지
+        Cookie cookie = new Cookie("accessToken", null);
+        cookie.setMaxAge(0);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
     }
 
     @Override
