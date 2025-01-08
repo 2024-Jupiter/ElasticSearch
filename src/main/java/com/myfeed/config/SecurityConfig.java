@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/send-sms/**", "/error").permitAll()
                         .requestMatchers("/login", "/api/users/find-id" ,"/api/users/find-password" ,"/api/users/check-email","/api/users/check-nickname", "/api/users/custom-login", "/api/users/register", "/api/posts/detail/*", "api/replies/posts/detail/*" ,"/api/postEs/**", "/api/users/*/detail", "/api/users/*", "/view/home").permitAll()
-                        .requestMatchers("/login/oauth2/code/google","auth/google/callback","/auth/kakao/callback", "/login/oauth2/code/**").permitAll()
+                        .requestMatchers("/oauth2/authorization/kakao","/login/oauth2/**","/login/oauth2/code/google","auth/google/callback","/auth/kakao/callback").permitAll()
                         .requestMatchers("/css/**","/js/**","/lib/**","/scss/**", "/img/**", "/favicon.ico" ).permitAll()
                         .requestMatchers("/api/posts/**", "/api/replies/**").hasAuthority(String.valueOf(Role.USER)) // 로그인한 사용자만 사용 가능 (개시글 목록 보기랑 게시글 보기는 비로그인도 가능)
                         .requestMatchers("/api/admin/users/**", "/api/admin/users", "/api/admin/reports/**").hasAuthority(String.valueOf(Role.ADMIN))
