@@ -33,7 +33,6 @@ public class MyOAuth2UserService extends DefaultOAuth2UserService {
         User user = null;
 
         String accessToken = userRequest.getAccessToken().getTokenValue();
-        System.out.println("------------액세스 토큰: "+ accessToken + " -------------");
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
@@ -42,7 +41,7 @@ public class MyOAuth2UserService extends DefaultOAuth2UserService {
             // public User(String email, String password, String username, String nickname, String profileImage, LoginProvider loginProvider) {
             case "kakao":
                 Map<String, Object> account = (Map) oAuth2User.getAttribute("kakao_account");
-                email = (String) account.get("email");
+                email = "kakao_"+ account.get("email");
                 user = userService.findByEmail(email);
 
                 if (user == null) {
@@ -51,7 +50,6 @@ public class MyOAuth2UserService extends DefaultOAuth2UserService {
                     account = (Map) oAuth2User.getAttribute("kakao_account");
                     String nickname = (String) properties.get("nickname");
                     nickname = (nickname == null) ? "k_"+kid : nickname;
-                    email = (String) account.get("email");
                     profileUrl = (String) properties.get("profile_image");
                     user = User.builder()
                                     .email(email)
