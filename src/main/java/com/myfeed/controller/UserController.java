@@ -59,10 +59,16 @@ public class UserController {
         return "main";
     }
 
-    // 로그인
+    // 로그인 경로 통일 예정
     @GetMapping("/custom-login")
-    public String loginForm() {
-        Map<String, Object> messagemap = new HashMap<>();
+    public String loginForm(@CurrentUser User user, Model model) {
+        if (user == null) {
+            model.addAttribute("username", "Guest");
+            return "main";
+        }
+        model.addAttribute("username", user.getNickname());
+        model.addAttribute("id", user.getId());
+        model.addAttribute("email", user.getEmail());
         return "main";
     }
 
@@ -161,14 +167,11 @@ public class UserController {
 
     // 로그인 성공 시
     @GetMapping("/loginSuccess") // json return, home으로 redirect,
-    public String loginSuccessV(Model model) {
+    public String loginSuccess(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        System.out.println("authentication.getName(): " + authentication.getName());
         User user = userService.findByEmail(email);
-        System.out.println("---------아이디" + user.getId());
-        System.out.println("---------이메일" + user.getEmail());
-        String url = "/home";
+        String url = "/api/users/test";
         String msg = user.getNickname() + "님 환영합니다.";
         model.addAttribute("msg", msg);
         model.addAttribute("url", url);
@@ -183,20 +186,17 @@ public class UserController {
         User user = userService.findByEmail(findPasswordDto.getEmail());
 
         if (user == null) {
-            throw new CustomException("404", "아이디가 존재하지 않습니다.");
-            //throw new ExpectedException(ErrorCode.USER_NOT_FOUND);
+            throw new ExpectedException(ErrorCode.USER_NOT_FOUND);
         }
 
         if (user.getLoginProvider() != LoginProvider.FORM) {
-            throw new CustomException("403", "소셜 로그인으로 시도하세요.");
-            //throw new ExpectedException(ErrorCode.ID_CONFLICT);
+            throw new ExpectedException(ErrorCode.ID_CONFLICT);
         }
 
         String savedPhoneNumber = user.getPhoneNumber();
 
         if (!savedPhoneNumber.equals(findPasswordDto.getPhoneNumber())) {
-            throw new CustomException("403", "휴대폰 번호가 기존 정보와 일치하지 않습니다.");
-            //throw new ExpectedException(ErrorCode.PROFILE_PHONE_MISMATCH);
+            throw new ExpectedException(ErrorCode.PROFILE_PHONE_MISMATCH);
         }
         messagemap.put("message", "비밀번호를 변경하세요.");
         messagemap.put("redirectUrl", "redirect:/api/users/change-password");
@@ -222,8 +222,7 @@ public class UserController {
                 findIdDto.getPhoneNumber());
 
         if (users.isEmpty()) {
-            throw new CustomException("404", "정보와 일치하는 회원이 존재하지 않습니다.");
-            //throw new ExpectedException(ErrorCode.USER_NOT_FOUND);
+            throw new ExpectedException(ErrorCode.USER_NOT_FOUND);
         }
 
         List<String> emailList = users.stream().map(User::getEmail).toList();

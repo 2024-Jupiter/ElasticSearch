@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class MyAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        String url = "/api/users/custom-login";
+        String url = "/api/users/test";
         String errorMsg;
 
         if (exception instanceof BadCredentialsException) { // UsernameNotFoundException 여기서 잡힘
@@ -27,7 +27,7 @@ public class MyAuthenticationFailureHandler implements AuthenticationFailureHand
         }
         // forward
         request.setAttribute("msg", errorMsg);
-        request.setAttribute("url", "/api/users/custom-login");
+        request.setAttribute("url", url);
         request.getRequestDispatcher("/api/users/login-error").forward(request, response);
     }
 }
