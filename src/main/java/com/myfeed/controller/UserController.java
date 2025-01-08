@@ -233,5 +233,8 @@ public class UserController {
         return messagemap;
     }
 
-
+    @PostMapping("/login-error")
+    public String loginError() {
+        return "common/alertMsg";
+    }
 }
