@@ -16,6 +16,7 @@ import com.myfeed.model.user.UserFindPasswordDto;
 import com.myfeed.response.ErrorCode;
 import com.myfeed.service.Post.PostService;
 import com.myfeed.service.user.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -152,48 +153,26 @@ public class UserController {
 
     // 회원 탈퇴
     @GetMapping("/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable Long id, HttpServletResponse response) {
+        userService.deleteUserAccessToken(response);
         userService.deleteUser(id); //soft delete
         return "redirect:/api/users/custom-login";
     }
 
     // 로그인 성공 시
     @GetMapping("/loginSuccess") // json return, home으로 redirect,
-    public String loginSuccess(HttpSession session, Model model) {
+    public String loginSuccessV(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
+        System.out.println("authentication.getName(): " + authentication.getName());
         User user = userService.findByEmail(email);
         System.out.println("---------아이디" + user.getId());
         System.out.println("---------이메일" + user.getEmail());
-        session.setAttribute("sessId", user.getId());
         String url = "/home";
         String msg = user.getNickname() + "님 환영합니다.";
         model.addAttribute("msg", msg);
         model.addAttribute("url", url);
         return "common/alertMsg";
-    }
-
-
-    // 활성/비활성 회원 목록 가져오기
-    @GetMapping("/list")
-    public String list(@RequestParam(name = "p", defaultValue = "1") int page,
-            @RequestParam(name = "status", defaultValue = "true") boolean status,
-            Model model) {
-        Page<User> pagedUsers = userService.getPagedUser(page, status);
-        model.addAttribute("pagedUsers", pagedUsers);
-        model.addAttribute("status", status);
-        model.addAttribute("currentUserPage", page);
-        return "users/list";
-    }
-
-    //회원 활성/비활성 여부 수정하기
-    @PostMapping("/{uid}/status")
-    public String updateUserState(@PathVariable Long id,
-            @RequestParam(name = "status") boolean status,
-            Model model) {
-        userService.updateUserStatus(id, status);
-        //todo model로 넘겨주는 parameter 추가 예정,,
-        return "redirect:/users/list";
     }
 
     @PostMapping("/find-password")
@@ -205,16 +184,19 @@ public class UserController {
 
         if (user == null) {
             throw new CustomException("404", "아이디가 존재하지 않습니다.");
+            //throw new ExpectedException(ErrorCode.USER_NOT_FOUND);
         }
 
         if (user.getLoginProvider() != LoginProvider.FORM) {
             throw new CustomException("403", "소셜 로그인으로 시도하세요.");
+            //throw new ExpectedException(ErrorCode.ID_CONFLICT);
         }
 
         String savedPhoneNumber = user.getPhoneNumber();
 
         if (!savedPhoneNumber.equals(findPasswordDto.getPhoneNumber())) {
             throw new CustomException("403", "휴대폰 번호가 기존 정보와 일치하지 않습니다.");
+            //throw new ExpectedException(ErrorCode.PROFILE_PHONE_MISMATCH);
         }
         messagemap.put("message", "비밀번호를 변경하세요.");
         messagemap.put("redirectUrl", "redirect:/api/users/change-password");
@@ -241,6 +223,7 @@ public class UserController {
 
         if (users.isEmpty()) {
             throw new CustomException("404", "정보와 일치하는 회원이 존재하지 않습니다.");
+            //throw new ExpectedException(ErrorCode.USER_NOT_FOUND);
         }
 
         List<String> emailList = users.stream().map(User::getEmail).toList();
@@ -250,5 +233,8 @@ public class UserController {
         return messagemap;
     }
 
-
+    @PostMapping("/login-error")
+    public String loginError() {
+        return "common/alertMsg";
+    }
 }

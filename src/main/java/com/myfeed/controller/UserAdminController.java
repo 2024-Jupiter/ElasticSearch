@@ -48,7 +48,6 @@ public class UserAdminController {
             @RequestParam(name="status", defaultValue = "true") boolean status,
             Model model) {
         Page<User> pagedUsers = userService.getPagedUser(page, status);
-        System.out.println("출력완");
         model.addAttribute("pagedUsers", pagedUsers);
         model.addAttribute("status", status);
         model.addAttribute("currentUserPage", page);
