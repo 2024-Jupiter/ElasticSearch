@@ -33,8 +33,22 @@ public class GlobalExceptionHandler {
                     : error.getObjectName();
             errors.put(fieldName, error.getDefaultMessage());
         });
-        System.out.println(errors);
-        // {registerDto=비밀번호가 일치하지 않습니다., email=이메일 형식이 올바르지 않습니다.}
+
+        // ErrorResponse errorResponse = new ErrorResponse("VALIDATION_FAIL", "유효성 검증에 실패했습니다.");;
+        //
+        // // {registerDto = 비밀번호가 일치하지 않습니다., email = 이메일 형식이 올바르지 않습니다.}
+        // for (Map.Entry<String, String> entry : errors.entrySet()) {
+        //     String fieldName = entry.getKey();
+        //
+        //     if (fieldName.equals("registerDto")) {
+        //         errorResponse = ErrorResponse.of(fieldName);
+        //         break;
+        //     } else if (fieldName.equals("email")) {
+        //         errorResponse = new ErrorResponse("INVALID_EMAIL_TYPE", errorMessage);
+        //         break;
+        //     }
+        // }
+
         return new ErrorResponse("VALIDATION_FAIL", "유효성 검증에 실패했습니다.");
     }
 

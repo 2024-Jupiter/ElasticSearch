@@ -13,7 +13,7 @@ public interface PostService {
     Post findPostById(Long id);
 
     // 내 게시글 페이지 네이션
-    Page<Post> getPagedPostsByUserId(int page, User user);
+    Page<Post> getPagedPostsByUserId(int page, Long userId);
 
     // 게시글 생성
     Long createPost(Long userId, PostDto postDto);

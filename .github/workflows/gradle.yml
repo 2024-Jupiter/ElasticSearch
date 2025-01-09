@@ -1,0 +1,71 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: CI/CD using github actions & docker
+
+on:
+  push:
+    branches: [ "main-real" ]
+  pull_request:
+    branches: [ "main-real" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: make application-deploy.yaml
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources
+        touch ./application-local.yaml
+        echo "${{ secrets.APPLICATION_DEPLOY }}" > ./application-local.yaml
+      shell: bash
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+
+    - name: Build with Gradle Wrapper
+      run: |
+        chmod +x ./gradlew
+        ./gradlew clean build -x test
+
+    - name: Docker Image Build
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/myfeed .
+
+    - name: DockerHub Login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: DockerHub Push
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/myfeed
+
+    - name: Application Run
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_KEY }}
+
+        script: |
+          sudo docker kill myfeed
+          sudo docker rm -f myfeed
+          sudo docker rmi ${{ secrets.DOCKERHUB_USERNAME }}/myfeed
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/myfeed
+          sudo docker run -p 8070:8070 \
+          --name myfeed \
+          -d ${{ secrets.DOCKERHUB_USERNAME }}/myfeed

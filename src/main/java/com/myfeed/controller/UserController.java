@@ -5,6 +5,7 @@ import com.myfeed.exception.CustomException;
 import com.myfeed.exception.ExpectedException;
 import com.myfeed.annotation.CurrentUser;
 import com.myfeed.model.post.Post;
+import com.myfeed.model.post.PostListDto;
 import com.myfeed.model.user.LoginProvider;
 import com.myfeed.model.user.RegisterDto;
 import com.myfeed.model.user.Role;
@@ -18,9 +19,11 @@ import com.myfeed.service.Post.PostService;
 import com.myfeed.service.user.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -107,14 +110,49 @@ public class UserController {
     }
 
     // 회원정보 상세보기
+//    @GetMapping("/detail")
+//    public String detail(@CurrentUser User user,
+//            @RequestParam(name = "p", defaultValue = "1") int page,
+//            Model model) {
+//        Map<String, Object> messagemap = new HashMap<>();
+//        model.addAttribute("user", user);
+//        Page<Post> postList = postService.getPagedPostsByUserId(page, user);
+//        model.addAttribute("postList", postList);
+//
+//        return "users/detail";
+//    }
+
+
+    // 회원정보 상세보기
     @GetMapping("/detail")
     public String detail(@CurrentUser User user,
             @RequestParam(name = "p", defaultValue = "1") int page,
             Model model) {
         Map<String, Object> messagemap = new HashMap<>();
         model.addAttribute("user", user);
-        Page<Post> postList = postService.getPagedPostsByUserId(page, user);
+        Page<Post> posts = postService.getPagedPostsByUserId(page, user.getId());
+
+        List<PostListDto> postList = posts.getContent().stream().map(post -> {
+            return new PostListDto(
+                    post.getId(),
+                    post.getTitle(),
+                    null,
+                    user.getNickname(),
+                    post.getCreatedAt()
+            );
+        }).collect(Collectors.toList());
+
+        int totalPages = posts.getTotalPages();
+        int startPage = (int) Math.ceil((page - 0.5) / postService.PAGE_SIZE - 1) * postService.PAGE_SIZE + 1;
+        int endPage = Math.min(startPage + postService.PAGE_SIZE - 1, totalPages);
+        List<Integer> pageList = new ArrayList<>();
+        for (int i = startPage; i <= endPage; i++)
+            pageList.add(i);
+
         model.addAttribute("postList", postList);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageList", pageList);
 
         return "users/detail";
     }

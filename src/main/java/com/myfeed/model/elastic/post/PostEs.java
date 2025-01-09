@@ -1,35 +1,33 @@
-package com.myfeed.model.post;
+package com.myfeed.model.elastic.post;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.myfeed.model.reply.ReplyDetailDto;
+import com.myfeed.model.post.Category;
 import com.myfeed.model.reply.ReplyEs;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
-@Document(indexName = "posts")
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
+@ToString
+@Document(indexName = "posts")
 public class PostEs {
     @Id
-    @Column(name = "id", nullable = false)
+    @Field(name = "id",type = FieldType.Keyword)
     private String id;
 
     // 글쓴이 정보
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Keyword,name = "nickname")
     private String nickname;
 
     // 게시글 정보
@@ -48,14 +46,15 @@ public class PostEs {
     @Field(type = FieldType.Integer)
     private int likeCount;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @Field(type = FieldType.Date, format = {}, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime createdAt;
+    @Field(type = FieldType.Integer)
+    private int replyCount;
 
-    // 댓글
     @Field(type = FieldType.Nested)
     private List<ReplyEs> replies;
 
-    @Field(type = FieldType.Integer)
-    private int replyCount;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Field(type = FieldType.Date, format = {DateFormat.date_time}, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createdAt;
+
 }
+

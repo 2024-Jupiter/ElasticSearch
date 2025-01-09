@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 내 게시글 페이지 네이션 (동시성)
     @Query("SELECT p FROM Post p WHERE p.user.isDeleted = false")
-    Page<Post> findPagedPostsByUserId(User user, Pageable pageable);
+    Page<Post> findPagedPostsByUserId(Long userId, Pageable pageable);
 
     // 조회수 증가 (동시성)
     @Modifying

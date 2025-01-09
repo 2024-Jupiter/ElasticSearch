@@ -133,7 +133,7 @@ public class PostController {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
 
-        Page<Post> posts = postService.getPagedPostsByUserId(page, user);
+        Page<Post> posts = postService.getPagedPostsByUserId(page, user.getId());
         Map<String, Object> response = new HashMap<>();
 
         posts.getContent().forEach(post -> {
