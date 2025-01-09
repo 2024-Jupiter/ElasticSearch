@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class PostServiceImpl implements PostService {
     @Autowired PostRepository postRepository;
@@ -142,19 +143,18 @@ public class PostServiceImpl implements PostService {
             throw new  ExpectedException(ErrorCode.REPLY_BLOCKED);
         }
 
-        List<Image> updatedImages = convertImageDtosToImages(updateDto.getImages(), post);
+//        if (!updateDto.getImages().isEmpty()) {
+//            for (ImageDto imageDto : updateDto.getImages()) {
+//                if (!isValidImageFormat(imageDto)) {
+//                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
+//                }
+//            }
+//        }
+//        List<Image> updatedImages = convertImageDtosToImages(updateDto.getImages(), post);
+//        post.setImages(updatedImages);
 
         post.setTitle(updateDto.getTitle());
         post.setContent(updateDto.getContent());
-        post.setImages(updatedImages);
-
-        if (!updateDto.getImages().isEmpty()) {
-            for (ImageDto imageDto : updateDto.getImages()) {
-                if (!isValidImageFormat(imageDto)) {
-                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
-                }
-            }
-        }
 
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));

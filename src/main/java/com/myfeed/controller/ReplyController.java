@@ -42,7 +42,7 @@ public class ReplyController {
     public ResponseEntity<Map<String, Object>> createReply(@PathVariable Long id,
                                                            @CurrentUser User user,
                                                            @RequestParam Long postId,
-                                                           @Valid ReplyDto replyDto) {
+                                                           @Valid @RequestBody ReplyDto replyDto) {
         Reply reply = replyService.findByReplyId(id);
         if (!reply.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
@@ -114,7 +114,7 @@ public class ReplyController {
     @PatchMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateReply(@PathVariable Long id,
                                                            @CurrentUser User user,
-                                                           @Valid ReplyDto replyDto) {
+                                                           @Valid @RequestBody ReplyDto replyDto) {
         Reply reply = replyService.findByReplyId(id);
         if (!reply.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
