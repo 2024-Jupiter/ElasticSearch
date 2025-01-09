@@ -1,7 +1,7 @@
 package com.myfeed.service.user;
 
 import com.myfeed.jwt.AccountAdapter;
-import com.myfeed.model.user.MyUserDetails;
+import com.myfeed.model.user.LoginProvider;
 import com.myfeed.model.user.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class MyUserDetailsService implements UserDetailsService {
         User user = userService.findByEmail(email);
 
         // soft deleted된 유저 차단
-        if (user == null || user.isDeleted()) {
+        if (user == null || user.getLoginProvider().equals(LoginProvider.FORM) && user.isDeleted()) {
             // log.warn("form Login 실패: 이메일을 찾을 수 없습니다. (user email: " + email + ")");
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email);
         }
