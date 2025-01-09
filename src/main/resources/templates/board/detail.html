@@ -153,7 +153,7 @@
   <!-- 댓글 작성 폼 -->
   <div style="margin: auto; width: 70%; margin-top: 20px;" class="control-group">
     <form id="replyForm" th:action="@{/api/replies/create}" method="post">
-<!--      <input type="hidden" name="postId" th:value="${post.id}" />-->
+      <input type="hidden" name="postId" th:value="${id}" />
       <div class="control-group">
         <textarea class="form-control" name="content" rows="3" placeholder="댓글을 작성하세요." required></textarea>
       </div>
@@ -163,12 +163,12 @@
 </div>
 
 
-<div>
-               <span th:each="page : ${pageList}">
-                   <a th:href="@{/api/posts/detail(id=${post.id}, p=${page})}"
-                      th:text="${page}" th:classappend="${page == currentPage} ? 'active' : ''"></a>
-               </span>
-</div>
+<!--<div>-->
+<!--               <span th:each="page : ${pageList}">-->
+<!--                   <a th:href="@{/api/posts/detail(id=${post.id}, p=${page})}"-->
+<!--                      th:text="${page}" th:classappend="${page == currentPage} ? 'active' : ''"></a>-->
+<!--               </span>-->
+<!--</div>-->
 
 <div class="container-fluid pt-5">
 <div style="margin: auto; width: 70%; justify-content: flex-end;" class="row">

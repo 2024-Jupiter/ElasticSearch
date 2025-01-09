@@ -68,8 +68,8 @@ if(userInfo) {
 const updateBtn = document.getElementById('update');
 if (updateBtn) {
   updateBtn.addEventListener('click', function () {
-      const options = 'width=700, height=600, top=50, left=50, scrollbars=yes'
-      window.open(`/api/users/update`,'_blank',options)
+    const options = 'width=700, height=600, top=50, left=50, scrollbars=yes'
+    window.open(`/api/users/update`,'_blank',options)
 
 
   });
@@ -90,10 +90,3 @@ if (cancel) {
   });
 }
 
-const kakaoLogin = document.getElementById('kakaoLogin');
-
-if(kakaoLogin) {
-  kakaoLogin.addEventListener('click', function () {
-    location.href = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c597f9b416fd429ed7553dc435b36b4e&scope=profile_nickname%20account_email%20profile_image&state=gS_bYTJC6mOHREv00p1lCuf_0NU0tfbfo0d32IhC5ZE%3D&redirect_uri=http://localhost:8070/login/oauth2/code/kakao&code_challenge=-KAW5YxxqdgclS6bpBiYplEhuTfbmIOek82eMd6T8Bo&code_challenge_method=S256';
-  })
-}6

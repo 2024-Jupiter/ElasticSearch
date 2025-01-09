@@ -159,31 +159,24 @@
         </tr>
       </table>
 
-      <table style="width: 100%; margin-top: 5%;">
-        <tr>
-          <td>post</td>
-        </tr>
-        <tr>
-          <td>post</td>
-        </tr>
-        <tr>
-          <td>post</td>
-        </tr>
-        <tr>
-          <td>post</td>
-        </tr>
-        <tr>
-          <td>post</td>
-        </tr>
-        <tr>
-          <td>post</td>
-        </tr>
-        <tr>
-          <td>post</td>
-        </tr>
+      <div class="container-fluid pt-5">
+        <div class="row"
+             style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 100%;">
+          <div class="col-12 mb-0">
 
-      </table>
+            <table class="table" style="text-align: center;">
+              <tbody>
+              <tr th:each="post : ${postList}">
+                <td style="width: 55%; text-align: left" >
+                  <a th:href="@{/api/posts/detail(id=${post.id})}" th:text="${post.title}"></a>
+                </td>
+<!--                <td th:text="${post.author}" style="width: 10%;"></td>-->
+                <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}" style="width: 10%;"></td>
+              </tr>
 
+
+              </tbody>
+            </table>
 
     </div>
   </div>
@@ -208,6 +201,6 @@
 
 
 <!-- Template Javascript -->
-<script src="/js/home.js"></script>
+<script src="/js/user.js"></script>
 </body>
 </html>
