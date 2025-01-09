@@ -134,7 +134,6 @@ public class ReplyController {
     // 댓글 삭제
     @ResponseBody
     @DeleteMapping("/{id}")
-    //@PreAuthorize("#user.id == authentication.principal.id")
     public ResponseEntity<Map<String, Object>> deleteReply(@PathVariable Long id,
                                                            @CurrentUser User user) {
         Reply reply = replyService.findByReplyId(id);

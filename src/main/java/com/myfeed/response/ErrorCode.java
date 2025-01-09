@@ -37,8 +37,11 @@ public enum ErrorCode {
 	 */
 	POST_NOT_FOUND("POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),
 	ACCESS_DENIED("ACCESS_DENIED", "이 카테고리는 관리자만 선택 가능 합니다. "),
+
+	// 이미지
 	IMAGE_UPLOAD_FAIL("IMAGE_UPLOAD_FAIL", "이미지 업로드 실패 했습니다."),
 	WRONG_IMAGE_FILE("WRONG_IMAGE_FILE", "잘못된 이미지 파일 형식 입니다."),
+
 	USER_DELETED("USER_DELETED", "삭제된 사용자 입니다."),
 	INCLUDED_DELETED_USER_IN_POST("INCLUDED_DELETED_USER_IN_POST", "삭제된 사용자의 게시글이 포함 되어 있습니다."),
 	INCLUDED_BLOCK_POST("INCLUDED_BLOCK_POST", "차단된 게시글이 포함 되어 있습니다."),

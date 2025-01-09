@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,5 +28,7 @@ public class PostDto {
     @NotNull(message = "게시글 유형을 선택 하세요.")
     private Category category;
 
+    // 이미지 업로드 시 필요
+    //private List<MultipartFile> images = new ArrayList<>();
     private List<ImageDto> images = new ArrayList<>();
 }

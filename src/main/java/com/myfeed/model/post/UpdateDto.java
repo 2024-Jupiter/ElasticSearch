@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,5 +23,7 @@ public class UpdateDto {
     @Size(min = 1, max = 500, message = "한 글자 이상 내용을 입력 하세요.")
     private String Content;
 
+    // 이미지 업로드 시 필요
+    //private List<MultipartFile> images = new ArrayList<>();
     private List<ImageDto> images = new ArrayList<>();
 }
