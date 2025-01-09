@@ -16,7 +16,7 @@ public enum ErrorCode {
 	LOGIN_ERROR("LOGIN_ERROR", "로그인 중 오류가 발생했습니다. 다시 시도해주세요."),
 
 	//회원가입
-	ID_ALREADY_EXIST("INCLUDED_BLOCK_REPLY", "이미 사용 중인 이메일입니다."),
+	ID_ALREADY_EXIST("ID_ALREADY_EXIST", "이미 사용 중인 이메일입니다."),
 	NICKNAME_ALREADY_EXIST("NICKNAME_ALREADY_EXIST", "이미 사용 중인 닉네임입니다."),
 
 	//아이디, 비밀번호 찾기

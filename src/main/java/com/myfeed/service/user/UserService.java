@@ -2,6 +2,7 @@ package com.myfeed.service.user;
 
 import com.myfeed.model.user.UpdateDto;
 import com.myfeed.model.user.User;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -25,6 +26,8 @@ public interface UserService {
     void registerUser(User user);
 
     void deleteUser(Long uid);
+
+    void deleteUserAccessToken(HttpServletResponse response);
 
     void setTempPassword(String email, String tempPassword);
 

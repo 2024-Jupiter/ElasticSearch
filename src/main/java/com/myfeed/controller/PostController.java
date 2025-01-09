@@ -37,27 +37,27 @@ public class PostController {
     @Autowired private ReplyService replyService;
 
     // 게시글 작성 폼 (GET 요청 으로 폼을 가져옴)
-    @GetMapping("create")
+    @GetMapping("/create")
     public String createPostForm() {
-        return "api/posts/create";
+        return "post/create";
     }
 
     // 이미지 x
     // 게시글 작성
     @ResponseBody
-    @PostMapping("create")
-    public ResponseEntity<Map<String, Object>> createPost(@PathVariable Long id, @CurrentUser User user,
-                                                          @Valid @RequestBody PostDto postDto) {
-        Post post = postService.findPostById(id);
-        if (!post.getUser().equals(user)) {
-            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
-        }
+    @PostMapping("/create")
+    public ResponseEntity<Map<String, Object>> createPost(@CurrentUser User user,
+                                                          @Valid PostDto postDto) {
+//        Post post = postService.findPostById(id);
+//        if (!post.getUser().equals(user)) {
+//            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
+//        }
 
         postService.createPost(user.getId(), postDto);
         Map<String, Object> response = new HashMap<>();
 
-        String redirectUrl = "/api/posts/detail/" + id;
-        response.put("redirectUrl",redirectUrl);
+//        String redirectUrl = "/api/posts/detail/" + id;
+//        response.put("redirectUrl",redirectUrl);
         response.put("success", true);
         response.put("message", "게시글이 작성 되었습니다.");
 

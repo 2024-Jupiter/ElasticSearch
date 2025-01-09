@@ -148,9 +148,11 @@ function sendNumber() {
     $.ajax({
       url: '/api/send-sms/send-authcode',
       type: 'POST',
-      data: {phoneNumber: cleanedPhoneNum},
+      data: JSON.stringify ({phoneNumber: cleanedPhoneNum}),
       dataType: 'json',
+      contentType: 'application/json',
       success: function (data) {
+        console.log(data);
         if (data.state === 'success') {
           Swal.fire({
             icon: 'success',

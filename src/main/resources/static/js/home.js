@@ -75,5 +75,12 @@ if (updateBtn) {
   });
 }
 
+const save = document.getElementById('save');
+
+if(save) {
+  save.addEventListener('click', function () {
+    document.getElementById('postForm').submit();
+  });
+}
 
 

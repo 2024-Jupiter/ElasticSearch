@@ -48,18 +48,18 @@ public class PostServiceImpl implements PostService {
                 .viewCount(0).likeCount(0)
                 .build();
 
-        if (!postDto.getImages().isEmpty()) {
-            for (ImageDto imageDto : postDto.getImages()) {
-                if (!isValidImageFormat(imageDto)) {
-                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
-                }
-            }
-        }
+//        if (!postDto.getImages().isEmpty()) {
+//            for (ImageDto imageDto : postDto.getImages()) {
+//                if (!isValidImageFormat(imageDto)) {
+//                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
+//                }
+//            }
+//        }
 
-        List<Image> images = convertImageDtosToImages(postDto.getImages(), post);
-        for (Image image: images) {
-            post.addImage(image);
-        }
+//        List<Image> images = convertImageDtosToImages(postDto.getImages(), post);
+//        for (Image image: images) {
+//            post.addImage(image);
+//        }
 
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
