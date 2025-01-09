@@ -35,8 +35,8 @@ public class SecurityConfig {
                 .headers(x -> x.frameOptions(y -> y.disable()))     // H2-console
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/send-sms/**", "/error").permitAll()
-                        .requestMatchers("/login", "/api/users/find-id" ,"/api/users/find-password" ,"/api/users/check-email","/api/users/check-nickname", "/api/users/custom-login", "/api/users/register", "/api/users/*/detail", "/api/users/*", "/view/home").permitAll()
-                        .requestMatchers("/oauth2/authorization/kakao","/login/oauth2/**","/login/oauth2/code/google","auth/google/callback","/auth/kakao/callback").permitAll()
+                        .requestMatchers("/login", "/api/users/find-id" ,"/api/users/find-password" ,"/api/users/check-email","/api/users/check-nickname", "/api/users/custom-login", "/api/users/register", "/api/search/**", "/api/users/*/detail", "/api/users/*", "/view/home").permitAll()
+                        .requestMatchers("/oauth2/authorization/kakao","/login/oauth2/**","/login/oauth2/code/google","auth/google/callback","/auth/kakao/callback", "/home",  "/api/users/test","/api/users/logout").permitAll()
                         .requestMatchers("/api/posts/detail/*", "api/replies/posts/detail/*" ,"/api/postEs/**" ).permitAll() // 게시글, 댓글 상세 보기 / 추천 게시글, 검색 게시글 목록 보기 및 상세 보기
                         .requestMatchers("/css/**","/js/**","/lib/**","/scss/**", "/img/**", "/favicon.ico" ).permitAll()
                         .requestMatchers("/api/posts/**", "/api/replies/**").hasAuthority(String.valueOf(Role.USER)) // 로그인한 사용자만 사용 가능

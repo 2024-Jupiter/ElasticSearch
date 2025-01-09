@@ -3,13 +3,11 @@ package com.myfeed.model.user;
 import com.myfeed.model.base.BaseTimeEntity;
 import com.myfeed.model.post.BlockStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "users")
 @Data

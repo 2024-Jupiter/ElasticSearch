@@ -1,10 +1,10 @@
 package com.myfeed.sync;
 
 import com.myfeed.exception.ExpectedException;
+import com.myfeed.model.elastic.post.PostEs;
 import com.myfeed.model.post.Post;
-import com.myfeed.model.post.PostEs;
 import com.myfeed.model.user.User;
-import com.myfeed.repository.elasticsearch.PostEsRepository;
+import com.myfeed.repository.elasticsearch.PostEsDataRepository;
 import com.myfeed.repository.jpa.PostRepository;
 import com.myfeed.repository.jpa.ReplyRepository;
 import com.myfeed.repository.jpa.UserRepository;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 @Component
 public class PostSyncEventListener {
     @Autowired private PostEsService postEsService;
-    @Autowired private PostEsRepository postEsRepository;
+    @Autowired private PostEsDataRepository postEsDataRepository;
     @Autowired private PostRepository postRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private ReplyRepository replyRepository;
@@ -49,7 +49,7 @@ public class PostSyncEventListener {
         } else if ("DELETE".equals(event.getOperation())) {
             postEsService.deleteFromElasticsearch(String.valueOf(event.getPostId()));
         } else if ("VIEW_COUNT_UP_AND_LIKE_COUNT_UP".equals(event.getOperation())) {
-            PostEs postEs = postEsRepository.findById(String.valueOf(event.getPostId())).orElseThrow(() -> new ExpectedException(ErrorCode.POST_ES_NOT_FOUND));
+            PostEs postEs = postEsDataRepository.findById(String.valueOf(event.getPostId())).orElseThrow(() -> new ExpectedException(ErrorCode.POST_ES_NOT_FOUND));
 
             postEs.setId(String.valueOf(postEs.getId()));
             postEs.setNickname(postEs.getNickname());
@@ -73,7 +73,7 @@ public class PostSyncEventListener {
 
             postEsService.syncToElasticsearch(postEs);
         } else if ("VIEW_COUNT_UP_AND_LIKE_COUNT_DOWN".equals(event.getOperation())) {
-            PostEs postEs = postEsRepository.findById(String.valueOf(event.getPostId())).orElseThrow(() -> new ExpectedException(ErrorCode.POST_ES_NOT_FOUND));
+            PostEs postEs = postEsDataRepository.findById(String.valueOf(event.getPostId())).orElseThrow(() -> new ExpectedException(ErrorCode.POST_ES_NOT_FOUND));
 
             postEs.setId(String.valueOf(postEs.getId()));
             postEs.setNickname(postEs.getNickname());

@@ -1,4 +1,4 @@
-package com.myfeed.model.post;
+package com.myfeed.model.elastic.post;
 
 
 import jakarta.persistence.Column;
