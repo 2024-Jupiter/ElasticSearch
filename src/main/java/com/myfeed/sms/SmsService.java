@@ -1,6 +1,7 @@
 package com.myfeed.sms;
 
-import com.myfeed.exception.UserNotFoundException;
+import com.myfeed.exception.ExpectedException;
+import com.myfeed.response.ErrorCode;
 import com.myfeed.service.user.UserService;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class SmsService {
         message.setFrom("01077052827");
 
         if (userService.findByPhoneNumber(smsRequestDto.getPhoneNumber()).isEmpty()) {
-            throw new UserNotFoundException("해당 전화번호로 등록된 사용자가 없습니다.");
+            throw new ExpectedException(ErrorCode.USER_NOT_FOUND);
         }
 
         message.setTo(smsRequestDto.getPhoneNumber());

@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfig {
-
     @Autowired
     private AuthenticationSuccessHandler authSuccessHandler;
     @Autowired
@@ -28,6 +27,8 @@ public class SecurityConfig {
     private MyOAuth2UserService myOAuth2UserService;
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private CustomSecurityHandler customSecurityHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,6 +44,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/admin/reports/posts/*", "/api/admin/reports/replies/*").hasAuthority(String.valueOf(Role.USER))
                         .requestMatchers("/api/admin/users/**", "/api/admin/users", "/api/admin/reports/**").hasAuthority(String.valueOf(Role.ADMIN))
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(customSecurityHandler) // Handle unauthenticated users
+                        .accessDeniedHandler(customSecurityHandler)      // Handle unauthorized access
                 )
                 .formLogin(auth -> auth
                         .loginPage("/api/users/test") // template return url users/loginPage

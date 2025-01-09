@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/api/posts")
@@ -86,17 +83,23 @@ public class PostController {
 
     // 내 게시글 페이지 네이션
     @ResponseBody
-    @GetMapping("/{id}/users")
-    public ResponseEntity<Map<String, Object>> myPostList(@PathVariable Long id,
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<Map<String, Object>> myPostList(@PathVariable Long userId,
                                                           @RequestParam(name="p", defaultValue = "1") int page,
                                                           @CurrentUser User user, HttpSession session) {
-        Post p = postService.findPostById(id);
-        if (!p.getUser().equals(user)) {
-            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
-        }
-
         Page<Post> posts = postService.getPagedPostsByUserId(page, user);
         Map<String, Object> response = new HashMap<>();
+
+        Optional<Post> firstPost = posts.stream().findFirst();
+        firstPost
+                .map(Post::getUser)
+                .map(User::getId)
+                .map(id -> id.equals(userId));
+        boolean isMatchingUserId = false;
+
+        if (!isMatchingUserId) {
+            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
 
         posts.getContent().forEach(post -> {
             if (post.getStatus() == BlockStatus.BLOCK_STATUS) {

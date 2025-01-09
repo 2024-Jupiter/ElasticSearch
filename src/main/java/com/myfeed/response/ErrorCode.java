@@ -15,11 +15,11 @@ public enum ErrorCode {
 	USER_DISABLED("USER_DISABLED", "비활성화된 회원입니다. 관리자에게 문의하세요"),
 	LOGIN_ERROR("LOGIN_ERROR", "로그인 중 오류가 발생했습니다. 다시 시도해주세요."),
 
-	//회원가입
+	// 회원가입
 	ID_ALREADY_EXIST("ID_ALREADY_EXIST", "이미 사용 중인 이메일입니다."),
 	NICKNAME_ALREADY_EXIST("NICKNAME_ALREADY_EXIST", "이미 사용 중인 닉네임입니다."),
 
-	//아이디, 비밀번호 찾기
+	// 아이디, 비밀번호 찾기
 	USER_NOT_FOUND("USER_NOT_FOUND","사용자를 찾을 수 없습니다."),
 	ID_CONFLICT("ID_CONFLICT", "소셜 로그인으로 시도하세요."),
 	PROFILE_PHONE_MISMATCH("PROFILE_PHONE_MISMATCH", "휴대폰 번호가 기존 정보와 일치하지 않습니다."),

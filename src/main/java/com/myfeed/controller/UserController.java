@@ -1,7 +1,6 @@
 
 package com.myfeed.controller;
 
-import com.myfeed.exception.CustomException;
 import com.myfeed.exception.ExpectedException;
 import com.myfeed.annotation.CurrentUser;
 import com.myfeed.model.post.Post;
@@ -17,7 +16,7 @@ import com.myfeed.response.ErrorCode;
 import com.myfeed.service.Post.PostService;
 import com.myfeed.service.user.UserService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
