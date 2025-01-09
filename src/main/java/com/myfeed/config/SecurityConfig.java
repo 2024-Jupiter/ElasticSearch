@@ -7,6 +7,7 @@ import com.myfeed.service.user.MyOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,10 +35,13 @@ public class SecurityConfig {
                 .headers(x -> x.frameOptions(y -> y.disable()))     // H2-console
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/send-sms/**", "/error").permitAll()
-                        .requestMatchers("/login", "/api/users/find-id" ,"/api/users/find-password" ,"/api/users/check-email","/api/users/check-nickname", "/api/users/custom-login", "/api/users/register", "/api/posts/detail/*", "api/replies/posts/detail/*" ,"/api/postEs/**", "/api/users/*/detail", "/api/users/*", "/view/home").permitAll()
+                        .requestMatchers("/login", "/api/users/find-id" ,"/api/users/find-password" ,"/api/users/check-email","/api/users/check-nickname", "/api/users/custom-login", "/api/users/register", "/api/users/*/detail", "/api/users/*", "/view/home").permitAll()
                         .requestMatchers("/oauth2/authorization/kakao","/login/oauth2/**","/login/oauth2/code/google","auth/google/callback","/auth/kakao/callback").permitAll()
+                        .requestMatchers("/api/posts/detail/*", "api/replies/posts/detail/*" ,"/api/postEs/**" ).permitAll() // 게시글, 댓글 상세 보기 / 추천 게시글, 검색 게시글 목록 보기 및 상세 보기
                         .requestMatchers("/css/**","/js/**","/lib/**","/scss/**", "/img/**", "/favicon.ico" ).permitAll()
-                        .requestMatchers("/api/posts/**", "/api/replies/**").hasAuthority(String.valueOf(Role.USER)) // 로그인한 사용자만 사용 가능 (개시글 목록 보기랑 게시글 상세 보기는 비로그인도 가능)
+                        .requestMatchers("/api/posts/**", "/api/replies/**").hasAuthority(String.valueOf(Role.USER)) // 로그인한 사용자만 사용 가능
+                        .requestMatchers(HttpMethod.POST, "/api/admin/reports/posts/*").hasAuthority(String.valueOf(Role.USER))
+                        .requestMatchers(HttpMethod.POST, "/api/admin/reports/replies/*").hasAuthority(String.valueOf(Role.USER))
                         .requestMatchers("/api/admin/users/**", "/api/admin/users", "/api/admin/reports/**").hasAuthority(String.valueOf(Role.ADMIN))
                         .anyRequest().authenticated()
                 )
