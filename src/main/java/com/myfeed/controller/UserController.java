@@ -19,11 +19,13 @@ import com.myfeed.service.Post.PostService;
 import com.myfeed.service.user.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -110,28 +112,14 @@ public class UserController {
     }
 
     // 회원정보 상세보기
-//    @GetMapping("/detail")
-//    public String detail(@CurrentUser User user,
-//            @RequestParam(name = "p", defaultValue = "1") int page,
-//            Model model) {
-//        Map<String, Object> messagemap = new HashMap<>();
-//        model.addAttribute("user", user);
-//        Page<Post> postList = postService.getPagedPostsByUserId(page, user);
-//        model.addAttribute("postList", postList);
-//
-//        return "users/detail";
-//    }
-
-
-    // 회원정보 상세보기
     @GetMapping("/detail")
     public String detail(@CurrentUser User user,
-            @RequestParam(name = "p", defaultValue = "1") int page,
-            Model model) {
+                         @RequestParam(name = "p", defaultValue = "1") int page,
+                         Model model) {
         Map<String, Object> messagemap = new HashMap<>();
         model.addAttribute("user", user);
-        Page<Post> posts = postService.getPagedPostsByUserId(page, user.getId());
-
+        Page<Post> posts = postService.getPagedPostsByUserId(page, user);
+        
         List<PostListDto> postList = posts.getContent().stream().map(post -> {
             return new PostListDto(
                     post.getId(),

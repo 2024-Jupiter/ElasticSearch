@@ -50,27 +50,15 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/create")
-    public String createPost(@CurrentUser User user,
-            @Valid PostDto postDto, RedirectAttributes re) {
-//        Post post = postService.findPostById(id);
-//        if (!post.getUser().equals(user)) {
-//            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
-//        }
-//        postService.createPost(user.getId(), postDto);
-//        Map<String, Object> response = new HashMap<>();
-//        String redirectUrl = "/api/posts/detail/" + id;
-//        response.put("redirectUrl",redirectUrl);
-//        response.put("success", true);
-//        response.put("message", "게시글이 작성 되었습니다.");
-
+    public String createPost(@CurrentUser User user, @Valid PostDto postDto,
+                             RedirectAttributes re) {
         Map<String, Object> response = new HashMap<>();
         Long id = postService.createPost(user.getId(), postDto);
-        re.addAttribute("id",id);
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
-
+        re.addAttribute("id",id);
         String redirectUrl = "/api/posts/detail/" + id;
         response.put("redirectUrl", redirectUrl);
         response.put("success", true);
@@ -79,11 +67,9 @@ public class PostController {
         return "redirect:/api/posts/detail";
     }
 
-
     @GetMapping("/list")
     public String postList(@RequestParam(name = "p", defaultValue = "1") int page, Model model) {
         Page<Post> posts = postService.getPagedPosts(page);
-        Map<String, Object> response = new HashMap<>();
 
         List<Long> userIds = posts.stream()
                 .map(post -> post.getUser().getId())
@@ -122,56 +108,12 @@ public class PostController {
         return "board/list";
     }
 
-    // 내 게시글 페이지 네이션
-    @ResponseBody
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<Map<String, Object>> myPostList(@PathVariable Long id,
-            @RequestParam(name = "p", defaultValue = "1") int page,
-            @CurrentUser User user, HttpSession session) {
-        Post p = postService.findPostById(id);
-        if (!p.getUser().equals(user)) {
-            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
-        }
-
-        Page<Post> posts = postService.getPagedPostsByUserId(page, user.getId());
-        Map<String, Object> response = new HashMap<>();
-
-        posts.getContent().forEach(post -> {
-            if (post.getStatus() == BlockStatus.BLOCK_STATUS) {
-                post.setContent("차단된 게시글 입니다.");
-            }
-        });
-
-        int totalPages = posts.getTotalPages();
-        int startPage =
-                (int) Math.ceil((page - 0.5) / postService.PAGE_SIZE - 1) * postService.PAGE_SIZE
-                        + 1;
-        int endPage = Math.min(startPage + postService.PAGE_SIZE - 1, totalPages);
-        List<Integer> pageList = new ArrayList<>();
-        for (int i = startPage; i <= endPage; i++) {
-            pageList.add(i);
-        }
-
-        session.setAttribute("currentPostPage", page);
-        response.put("success", true);
-        response.put("message", "내 게시글 리스트");
-        response.put("data", posts.getContent());
-        response.put("totalPages", totalPages);
-        response.put("startPage", startPage);
-        response.put("endPage", endPage);
-        response.put("pageList", pageList);
-
-        return ResponseEntity.ok(response);
-    }
-
     // 게시글 상세 보기(댓글 페이지 네이션 & 조회수 증가 & 좋아요 기능)
     @GetMapping("/detail")
     public String detail(
             @RequestParam(name = "p", defaultValue = "1") int page, @RequestParam("id") long id,
-            @RequestParam(name = "likeAction", required = false) String likeAction,
-            HttpSession session, Model model) {
+            @RequestParam(name = "likeAction", required = false) String likeAction, Model model) {
         Post post = postService.findPostById(id);
-        Map<String, Object> response = new HashMap<>();
 
         // 조회수 증가 (동시성)
         postService.incrementPostViewCountById(id);
@@ -186,7 +128,7 @@ public class PostController {
 
         PostDetailDto postDetailDto = new PostDetailDto(post);
 
-        Page<Reply> replies = replyService.getPagedRepliesByPost(page, post);
+        Page<Reply> replies = replyService.getPagedRepliesByPost(page, post.getId());
         replies.getContent().forEach(reply -> {
             if (reply.getStatus() == BlockStatus.BLOCK_STATUS) {
                 reply.setContent("차단된 댓글 입니다.");
@@ -198,28 +140,13 @@ public class PostController {
                 .toList();
 
         int totalPages = replies.getTotalPages();
-        int startPage =
-                (int) Math.ceil((page - 0.5) / postService.PAGE_SIZE - 1) * postService.PAGE_SIZE
-                        + 1;
+        int startPage = (int) Math.ceil((page - 0.5) / postService.PAGE_SIZE - 1) * postService.PAGE_SIZE + 1;
         int endPage = Math.min(startPage + postService.PAGE_SIZE - 1, totalPages);
         List<Integer> pageList = new ArrayList<>();
         for (int i = startPage; i <= endPage; i++) {
             pageList.add(i);
         }
 
-//        session.setAttribute("currentPostPage", page);
-//        String redirectUrl = "/api/posts/detail/" + post.getId();
-//        response.put("redirectUrl", redirectUrl);
-//        response.put("success", true);
-//        response.put("message", "게시글 상세 보기");
-//        response.put("post", postDetailDto);
-//        response.put("replies", replyDetailDto);
-//        int count = replyDetailDto.size();
-//        response.put("repliesCount", count);
-//        response.put("totalPages", totalPages);
-//        response.put("startPage", startPage);
-//        response.put("endPage", endPage);
-//        response.put("pageList", pageList);
         model.addAttribute("post", postDetailDto);
         model.addAttribute("replies", replyDetailDto);
         model.addAttribute("repliesCount", replyDetailDto.size());
@@ -227,51 +154,31 @@ public class PostController {
         model.addAttribute("currentPage", page);
         model.addAttribute("pageList", pageList);
 
-
         return "board/detail";
     }
 
     // 게시글 수정
-    @ResponseBody
     @PatchMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id,
-            @CurrentUser User user,
-            @Valid @RequestBody UpdateDto updateDto) {
+    public String updatePost(@PathVariable Long id, @CurrentUser User user, @Valid UpdateDto updateDto) {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
-
         postService.updatePost(id, user, updateDto);
-        Map<String, Object> response = new HashMap<>();
 
-        String redirectUrl = "/api/posts/detail/" + id;
-        response.put("redirectUrl", redirectUrl);
-        response.put("success", true);
-        response.put("message", "게시글이 수정 되었습니다.");
-
-        return ResponseEntity.ok(response);
+        return "redirect:/api/users/detail";
     }
 
     // 게시글 삭제
-    @ResponseBody
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deletePost(@PathVariable Long id,
-            @CurrentUser User user) {
+    public String deletePost(@PathVariable Long id, @CurrentUser User user) {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
-
         postService.deletePostById(id, user);
-        Map<String, Object> response = new HashMap<>();
 
-        String redirectUrl = "/api/posts/detail/" + id;
-        response.put("redirectUrl", redirectUrl);
-        response.put("success", true);
-        response.put("message", "댓글이 삭제 되었습니다.");
-
-        return ResponseEntity.ok(response);
+        return "redirect:/api/users/detail";
     }
 
     // 게시글 조회수 증가

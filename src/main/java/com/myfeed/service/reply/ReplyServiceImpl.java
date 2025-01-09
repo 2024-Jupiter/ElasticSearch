@@ -35,7 +35,7 @@ public class ReplyServiceImpl implements ReplyService {
     // 댓글 작성
     @Transactional
     @Override
-    public Reply createReply(Long userId, Long postId, ReplyDto replyDto) {
+    public Long createReply(Long userId, Long postId, ReplyDto replyDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ExpectedException(ErrorCode.USER_NOT_FOUND));
         Post post = postRepository.findById(postId).orElseThrow(() -> new ExpectedException(ErrorCode.USER_NOT_FOUND));
 
@@ -52,14 +52,14 @@ public class ReplyServiceImpl implements ReplyService {
         Reply savedReply = replyRepository.save(reply);
         eventPublisher.publishEvent(new ReplySyncEvent(savedReply.getId(), "CREATE_OR_UPDATE"));
 
-        return savedReply;
+        return savedReply.getId();
     }
 
     // 게시글 내의 댓글 리스트 (동시성)
     @Override
-    public Page<Reply> getPagedRepliesByPost(int page, Post post) {
+    public Page<Reply> getPagedRepliesByPost(int page, Long postId) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
-        Page<Reply> replies = replyRepository.findPagedRepliesByPost(post, pageable);
+        Page<Reply> replies = replyRepository.findPagedRepliesByPost(postId, pageable);
 
         for (Reply reply : replies) {
             if (reply.getStatus() == BlockStatus.BLOCK_STATUS) {

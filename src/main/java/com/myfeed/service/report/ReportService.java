@@ -17,23 +17,23 @@ public interface ReportService {
     // 신고 불러 오기
     Report findByReportId(Long id);
 
-    // 신고 게시글 페이지 네이션 (동시성)
-    Page<Report> getPagedReportsByPost(int page, Post post);
+    // 신고 게시글 내역 페이지 네이션 (동시성)
+    Page<Report> getPagedReportsByPost(int page, Long postId);
 
-    // 게시글 신고 상세 보기
-    List<Report> getReportsByPost(Long postId);
+    // 신고된 게시글 페이지 네이션 (동시성)
+    Page<Post> getReportedPosts(int page);
 
-    // 신고 댓글 페이지 네이션 (동시성)
-    Page<Report> getPagedReportsByReply(int page, Reply reply);
+    // 신고 댓글 내역 페이지 네이션 (동시성)
+    Page<Report> getPagedReportsByReply(int page, Long replyId);
 
-    // 댓글 신고 상세 보기
-    List<Report> getReportsByReply(Long replyId);
+    // 신고된 댓글 페이지 네이션 (동시성)
+    Page<Reply> getReportedReplies(int page);
 
     // 게시글 신고
-    Report reportPost(Long postId, ReportDto reportDto);
+    void reportPost(Long postId, ReportDto reportDto);
 
     // 댓글 신고
-    Report reportReply(Long replyId, ReportDto reportDto);
+    void reportReply(Long replyId, ReportDto reportDto);
 
     // 게시글 차단
     void BlockPost(Long id);

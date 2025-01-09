@@ -11,8 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 내 게시글 페이지 네이션 (동시성)
-    @Query("SELECT p FROM Post p WHERE p.user.isDeleted = false")
-    Page<Post> findPagedPostsByUserId(Long userId, Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE p.user.isDeleted = false AND p.user = :user")
+    Page<Post> findPagedPostsByUserId(@Param("user") User user, Pageable pageable);
 
     // 조회수 증가 (동시성)
     @Modifying
@@ -29,6 +29,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("UPDATE Post p SET p.likeCount = p.likeCount - 1 WHERE p.id = :id AND p.likeCount > 0")
     void decrementLikeCountById(@Param("id") Long id);
 
-
+    // 전체 게시글 페이지 네이션 (동시성)
+    @Query("SELECT p FROM Post p WHERE p.user.isDeleted = false")
     Page<Post> findAll(Pageable pageable);
 }

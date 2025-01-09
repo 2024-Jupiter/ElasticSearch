@@ -33,11 +33,11 @@ public class ReportServiceImpl implements ReportService {
         return reportRepository.findById(id).orElseThrow(() -> new ExpectedException(ErrorCode.REPORT_NOT_FOUND));
     }
 
-    // 신고 게시글 리스트 (동시성)
+    // 신고 게시글 내역 리스트 (동시성)
     @Override
-    public Page<Report> getPagedReportsByPost(int page, Post post) {
+    public Page<Report> getPagedReportsByPost(int page, Long postId) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
-        Page<Report> reports = reportRepository.findPagedReportsByPost(post, pageable);
+        Page<Report> reports = reportRepository.findPagedReportsByPost(postId, pageable);
 
         for (Report report: reports) {
             if (report.getPost().getUser() == null || report.getPost().getUser().isDeleted()) {
@@ -52,25 +52,30 @@ public class ReportServiceImpl implements ReportService {
         return new PageImpl<>(filteredReports, pageable, reports.getTotalElements());
     }
 
-    // 게시글 신고 내역 상세 보기
+    // 신고된 게시글 리스트
     @Override
-    public List<Report> getReportsByPost(Long postId) {
-        List<Report> reports = reportRepository.findReportByPostId(postId);
+    public Page<Post> getReportedPosts(int page) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
+        Page<Post> posts = reportRepository.findReportedPosts(pageable);
 
-        for (Report report: reports) {
-            if (report.getPost().getUser() == null || report.getPost().getUser().isDeleted()) {
+        for (Post post: posts) {
+            if (post.getUser() == null || post.getUser().isDeleted()) {
                 throw new ExpectedException(ErrorCode.INCLUDED_DELETED_USER_POST_IN_REPORT);
             }
         }
 
-        return reports;
+        List<Post> filteredPosts = posts.getContent().stream()
+                .filter(post -> post.getUser() != null && !post.getUser().isDeleted())
+                .toList();
+
+        return new PageImpl<>(filteredPosts, pageable, posts.getTotalElements());
     }
 
-    // 신고 댓글 리스트 (동시성)
+    // 신고 댓글 내역 리스트 (동시성)
     @Override
-    public Page<Report> getPagedReportsByReply(int page, Reply reply) {
+    public Page<Report> getPagedReportsByReply(int page, Long replyId) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
-        Page<Report> reports = reportRepository.findPagedReportsByReply(reply, pageable);
+        Page<Report> reports = reportRepository.findPagedReportsByReply(replyId, pageable);
 
         for (Report report: reports) {
             if (report.getReply().getUser() == null || report.getReply().getUser().isDeleted()) {
@@ -85,23 +90,28 @@ public class ReportServiceImpl implements ReportService {
         return new PageImpl<>(filteredReports, pageable, reports.getTotalElements());
     }
 
-    // 댓글 신고 내역 상세 보기
+    // 신고된 댓글 리스트
     @Override
-    public List<Report> getReportsByReply(Long replyId) {
-        List<Report> reports = reportRepository.findReportByReplyId(replyId);
+    public Page<Reply> getReportedReplies(int page) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
+        Page<Reply> replies = reportRepository.findReportedReplies(pageable);
 
-        for (Report report: reports) {
-            if (report.getReply().getUser() == null || report.getReply().getUser().isDeleted()) {
-                throw new ExpectedException(ErrorCode.INCLUDED_DELETED_USER_REPLY_IN_REPORT);
+        for (Reply reply: replies) {
+            if (reply.getUser() == null || reply.getUser().isDeleted()) {
+                throw new ExpectedException(ErrorCode.INCLUDED_DELETED_USER_POST_IN_REPORT);
             }
         }
 
-        return reports;
+        List<Reply> filteredReplies = replies.getContent().stream()
+                .filter(reply -> reply.getUser() != null && !reply.getUser().isDeleted())
+                .toList();
+
+        return new PageImpl<>(filteredReplies, pageable, replies.getTotalElements());
     }
 
     // 게시글 신고
     @Override
-    public Report reportPost(Long postId, ReportDto reportDto) {
+    public void reportPost(Long postId, ReportDto reportDto) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new ExpectedException(ErrorCode.POST_NOT_FOUND));
 
         if (post.getUser() == null || post.getUser().isDeleted()) {
@@ -116,12 +126,12 @@ public class ReportServiceImpl implements ReportService {
                 .description(reportDto.getDescription()).status(ProcessStatus.RELEASED)
                 .build();
 
-        return reportRepository.save(report);
+        reportRepository.save(report);
     }
 
     // 댓글 신고
     @Override
-    public Report reportReply(Long replyId, ReportDto reportDto) {
+    public void reportReply(Long replyId, ReportDto reportDto) {
         Reply reply = replyRepository.findById(replyId).orElseThrow(() -> new ExpectedException(ErrorCode.REPLY_NOT_FOUND));
 
         if (reply.getUser() == null || reply.getUser().isDeleted()) {
@@ -136,7 +146,7 @@ public class ReportServiceImpl implements ReportService {
                 .description(reportDto.getDescription()).status(ProcessStatus.RELEASED)
                 .build();
 
-        return reportRepository.save(report);
+        reportRepository.save(report);
     }
 
     // 게시글 차단

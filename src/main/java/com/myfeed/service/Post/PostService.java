@@ -33,5 +33,6 @@ public interface PostService {
     // 좋아요 감소 (동시성)
     void decrementPostLikeCountById(Long id);
 
+    // 전체 게시글 페이지 네이션 (동시성)
     Page<Post> getPagedPosts(int page);
 }

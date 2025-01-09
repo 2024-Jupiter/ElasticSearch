@@ -7,6 +7,7 @@ import com.myfeed.service.user.MyOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,24 +34,18 @@ public class SecurityConfig {
         http.csrf(auth -> auth.disable())       // CSRF 방어 기능 비활성화
                 .headers(x -> x.frameOptions(y -> y.disable()))     // H2-console
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/login", "/api/users/find-id", "/api/users/find-password",
-                                "/api/users/check-email", "/api/users/check-nickname","/api/send-sms/send-authcode",
-                                "/api/users/custom-login", "/api/users/register", "/api/replies/**",
-                                "/api/posts/**", "/api/search/**", "/api/users/*/detail",
-                                "/api/users/*", "/view/home", "/api/admin/reports/posts/{postId}",
-                                "/api/admin/reports/replies/{replyId}").permitAll()
-                        .requestMatchers("/login/oauth2/code/google", "auth/google/callback",
-                                "/auth/kakao/callback", "/login/oauth2/code/**", "/home",
-                                "/api/users/test","/api/users/logout").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/lib/**", "/scss/**", "/img/**")
-                        .permitAll()
-                        .requestMatchers("/api/admin/users/*/status", "/api/admin/users",
-                                "/api/admin/boards/report", "/api/admin/boards/**")
-                        .hasAuthority(String.valueOf(Role.ADMIN))
+                        .requestMatchers("/api/send-sms/**", "/error").permitAll()
+                        .requestMatchers("/login", "/api/users/find-id" ,"/api/users/find-password" ,"/api/users/check-email","/api/users/check-nickname", "/api/users/custom-login", "/api/users/register", "/api/search/**", "/api/users/*/detail", "/api/users/*", "/view/home").permitAll()
+                        .requestMatchers("/oauth2/authorization/kakao","/login/oauth2/**","/login/oauth2/code/google","auth/google/callback","/auth/kakao/callback", "/home",  "/api/users/test","/api/users/logout").permitAll()
+                        .requestMatchers("/api/posts/detail/*", "api/replies/posts/detail/*" ,"/api/postEs/**" ).permitAll() // 게시글, 댓글 상세 보기 / 추천 게시글, 검색 게시글 목록 보기 및 상세 보기
+                        .requestMatchers("/css/**","/js/**","/lib/**","/scss/**", "/img/**", "/favicon.ico" ).permitAll()
+                        .requestMatchers("/api/posts/**", "/api/replies/**").hasAuthority(String.valueOf(Role.USER)) // 로그인한 사용자만 사용 가능
+                        .requestMatchers(HttpMethod.POST, "/api/admin/reports/posts/*", "/api/admin/reports/replies/*").hasAuthority(String.valueOf(Role.USER))
+                        .requestMatchers("/api/admin/users/**", "/api/admin/users", "/api/admin/reports/**").hasAuthority(String.valueOf(Role.ADMIN))
                         .anyRequest().authenticated()
                 )
                 .formLogin(auth -> auth
-                        .loginPage("/api/users/custom-login") // template return url users/loginPage
+                        .loginPage("/api/users/test") // template return url users/loginPage
                         .loginProcessingUrl("/api/users/custom-login")  // post 엔드포인트
                         .usernameParameter("email")
                         .passwordParameter("pwd")
