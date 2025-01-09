@@ -1,274 +1,274 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8"/>
-  <title>MyFeed</title>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <meta content="Free HTML Templates" name="keywords"/>
-  <meta content="Free HTML Templates" name="description"/>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="utf-8"/>-->
+<!--  <title>MyFeed</title>-->
+<!--  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>-->
+<!--  <meta content="Free HTML Templates" name="keywords"/>-->
+<!--  <meta content="Free HTML Templates" name="description"/>-->
 
-  <!-- Favicon -->
-  <link th:href="@{/img/favicon.ico}" rel="icon"/>
+<!--  &lt;!&ndash; Favicon &ndash;&gt;-->
+<!--  <link th:href="@{/img/favicon.ico}" rel="icon"/>-->
 
-  <!-- Google Web Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
-        rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-        rel="stylesheet"/>
+<!--  &lt;!&ndash; Google Web Fonts &ndash;&gt;-->
+<!--  <link rel="preconnect" href="https://fonts.googleapis.com">-->
+<!--  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>-->
+<!--  <link-->
+<!--      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"-->
+<!--      rel="stylesheet">-->
+<!--  &lt;!&ndash; Font Awesome &ndash;&gt;-->
+<!--  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"-->
+<!--        rel="stylesheet"/>-->
+<!--  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"-->
+<!--        rel="stylesheet"/>-->
 
-  <!-- Libraries Stylesheet -->
-  <link href="/static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"/>
+<!--  &lt;!&ndash; Libraries Stylesheet &ndash;&gt;-->
+<!--  <link href="/static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"/>-->
 
-  <!--Sweet Alert2-->
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
-
-
-  <!-- Customized Bootstrap Stylesheet -->
-  <link href="/static/css/style.css" rel="stylesheet"/>
-  <link href="/static/css/globals.css" rel="stylesheet"/>
-</head>
-
-<body>
-<!-- Topbar Start -->
-<div class="container-fluid">
-  <div class="row bg-secondary py-2 px-xl-5">
-    <div class="col-lg-6 d-none d-lg-block">
-    </div>
-  </div>
-  <div class="row align-items-center py-3 px-xl-5">
-    <div class="col-lg-3 d-none d-lg-block">
-      <a th:href="@{/view/home2}">
-        <img src="/static/img/logo.png" style="margin-left: 5%; width: 40%;"/>
-      </a>
-    </div>
-    <div class="col-lg-6 col-6 text-left">
-      <form th:action="@{/search}" method="get">
-        <div class="input-group">
-          <input
-              type="text"
-              class="form-control"
-              name="query"
-              placeholder="검색창"
-          />
-          <div class="input-group-append">
-            <button class="input-group-text bg-transparent text-primary" type="submit"
-                    style="cursor: pointer;">
-              <i class="fa fa-search"></i>
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<!-- Topbar End -->
-
-<!-- Navbar Start -->
-<div class="container-fluid mb-2">
-  <div class="row border-top px-xl-5">
-    <div class="col-lg-9">
-      <nav
-          class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0"
-      >
-        <div
-            class="collapse navbar-collapse justify-content-between"
-            id="navbarCollapse"
-        >
-          <div class="navbar-nav mr-auto py-0">
-            <a th:href="@{/}" class="nav-item nav-link active">홈</a>
-            <a th:href="@{/}" class="nav-item nav-link">게시판</a>
-            <a th:href="@{/}" class="nav-item nav-link">메뉴1</a>
-            <div class="nav-item dropdown">
-              <a
-                  href="#"
-                  class="nav-link dropdown-toggle"
-                  data-toggle="dropdown"
-              >드롭다운</a
-              >
-              <div class="dropdown-menu rounded-0 m-0">
-                <a th:href="@{/}" class="dropdown-item">하위1</a>
-                <a th:href="@{/}" class="dropdown-item">하위2</a>
-              </div>
-            </div>
-            <a th:href="@{/}" class="nav-item nav-link">메뉴2</a>
-          </div>
-        </div>
-      </nav>
-    </div>
-  </div>
-</div>
-<!-- Navbar End -->
-
-<!-- 게시판 -->
-<div class="container-fluid pt-1">
-  <div class="row"
-       style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">
-    <div class="col-9 mb-0">
-      <a th:href="@{/all-posts}">
-        <span style="float: right;">전체보기</span>
-      </a>
-    </div>
-  </div>
-</div>
-
-<div class="container-fluid pt-1">
-  <div class="row"
-       style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">
-    <div class="col-9 mb-3">
-      <table class="table" style="text-align: center;">
-        <tbody>
-        <tr th:each="post : ${posts}">
-          <td style=" width: 5%;">
-            <img th:src="@{/img/undraw_profile.svg}" style="height: 54px;"/>
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a th:href="@{/post/{id}(id=${post.id})}">
-              <span th:text="${post.title} + ' [' + post.comments + ']'"></span>
-            </a>
-          </td>
-          <td style="width: 10%;" th:text="${post.author}">게시자</td>
-          <td style="width: 10%;" th:text="${post.date}">등록 날짜</td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+<!--  &lt;!&ndash;Sweet Alert2&ndash;&gt;-->
+<!--  <link rel="stylesheet"-->
+<!--        href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">-->
+<!--  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>-->
 
 
-<!--    <div class="col-3 mb-3" style="left: 3%; height: 750px;">-->
+<!--  &lt;!&ndash; Customized Bootstrap Stylesheet &ndash;&gt;-->
+<!--  <link href="/static/css/style.css" rel="stylesheet"/>-->
+<!--  <link href="/static/css/globals.css" rel="stylesheet"/>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--&lt;!&ndash; Topbar Start &ndash;&gt;-->
+<!--<div class="container-fluid">-->
+<!--  <div class="row bg-secondary py-2 px-xl-5">-->
+<!--    <div class="col-lg-6 d-none d-lg-block">-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="row align-items-center py-3 px-xl-5">-->
+<!--    <div class="col-lg-3 d-none d-lg-block">-->
+<!--      <a th:href="@{/view/home2}">-->
+<!--        <img src="/static/img/logo.png" style="margin-left: 5%; width: 40%;"/>-->
+<!--      </a>-->
+<!--    </div>-->
+<!--    <div class="col-lg-6 col-6 text-left">-->
+<!--      <form th:action="@{/search}" method="get">-->
+<!--        <div class="input-group">-->
+<!--          <input-->
+<!--              type="text"-->
+<!--              class="form-control"-->
+<!--              name="query"-->
+<!--              placeholder="검색창"-->
+<!--          />-->
+<!--          <div class="input-group-append">-->
+<!--            <button class="input-group-text bg-transparent text-primary" type="submit"-->
+<!--                    style="cursor: pointer;">-->
+<!--              <i class="fa fa-search"></i>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<!--&lt;!&ndash; Topbar End &ndash;&gt;-->
+
+<!--&lt;!&ndash; Navbar Start &ndash;&gt;-->
+<!--<div class="container-fluid mb-2">-->
+<!--  <div class="row border-top px-xl-5">-->
+<!--    <div class="col-lg-9">-->
+<!--      <nav-->
+<!--          class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0"-->
+<!--      >-->
+<!--        <div-->
+<!--            class="collapse navbar-collapse justify-content-between"-->
+<!--            id="navbarCollapse"-->
+<!--        >-->
+<!--          <div class="navbar-nav mr-auto py-0">-->
+<!--            <a th:href="@{/}" class="nav-item nav-link active">홈</a>-->
+<!--            <a th:href="@{/}" class="nav-item nav-link">게시판</a>-->
+<!--            <a th:href="@{/}" class="nav-item nav-link">메뉴1</a>-->
+<!--            <div class="nav-item dropdown">-->
+<!--              <a-->
+<!--                  href="#"-->
+<!--                  class="nav-link dropdown-toggle"-->
+<!--                  data-toggle="dropdown"-->
+<!--              >드롭다운</a-->
+<!--              >-->
+<!--              <div class="dropdown-menu rounded-0 m-0">-->
+<!--                <a th:href="@{/}" class="dropdown-item">하위1</a>-->
+<!--                <a th:href="@{/}" class="dropdown-item">하위2</a>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <a th:href="@{/}" class="nav-item nav-link">메뉴2</a>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </nav>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+<!--&lt;!&ndash; Navbar End &ndash;&gt;-->
+
+<!--&lt;!&ndash; 게시판 &ndash;&gt;-->
+<!--<div class="container-fluid pt-1">-->
+<!--  <div class="row"-->
+<!--       style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">-->
+<!--    <div class="col-9 mb-0">-->
+<!--      <a th:href="@{/all-posts}">-->
+<!--        <span style="float: right;">전체보기</span>-->
+<!--      </a>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--<div class="container-fluid pt-1">-->
+<!--  <div class="row"-->
+<!--       style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">-->
+<!--    <div class="col-9 mb-3">-->
+<!--      <table class="table" style="text-align: center;">-->
+<!--        <tbody>-->
+<!--        <tr th:each="post : ${posts}">-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img th:src="@{/img/undraw_profile.svg}" style="height: 54px;"/>-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a th:href="@{/api/posts/{id}(id=${post.id})}">-->
+<!--              <span th:text="${post.title} + ' [' + post.comments + ']'"></span>-->
+<!--            </a>-->
+<!--          </td>-->
+<!--          <td style="width: 10%;" th:text="${post.author}">게시자</td>-->
+<!--          <td style="width: 10%;" th:text="${post.date}">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
+<!--    </div>-->
+
+
+<!--&lt;!&ndash;    <div class="col-3 mb-3" style="left: 3%; height: 750px;">&ndash;&gt;-->
+<!--&lt;!&ndash;      <div>&ndash;&gt;-->
+<!--&lt;!&ndash;        <form th:action="@{/login}" method="post">&ndash;&gt;-->
+<!--&lt;!&ndash;          <div class="login">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="group">&ndash;&gt;-->
+<!--&lt;!&ndash;              <div class="overlap-group">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="rectangle"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="div">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <input type="text" placeholder=" 아이디" name="uid"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="rectangle-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <button type="button" class="btn btn-kakao" style="width: 100%; height: 100%;"><i&ndash;&gt;-->
+<!--&lt;!&ndash;                      class="fa-solid fa-comment" style="color: #050400"></i&ndash;&gt;-->
+<!--&lt;!&ndash;                  >&nbsp;&nbsp;kakao 로그인&ndash;&gt;-->
+<!--&lt;!&ndash;                  </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="rectangle-3">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <button type="submit" class="btn btn-secondary"&ndash;&gt;-->
+<!--&lt;!&ndash;                          style="width: 100%; height: 100%;">로그인&ndash;&gt;-->
+<!--&lt;!&ndash;                  </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="rectangle-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                  <input type="password" placeholder=" 비밀번호" name="password"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <a href="api/user/register">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="text-wrapper-2" id="register">회원가입&nbsp;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                  </a>&ndash;&gt;-->
+<!--&lt;!&ndash;                  <div class="text-wrapper-3" onclick="find()">아이디/비밀번호 찾기</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;              </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </form>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--    <div class="col-3 mb-3" style="left: 3%; height: 100%;">-->
 <!--      <div>-->
-<!--        <form th:action="@{/login}" method="post">-->
+<!--        <form action="#" method="post">-->
 <!--          <div class="login">-->
+<!--            <div class="div">-->
+<!--              <input type="email" name="email" placeholder=" 아이디" />-->
+<!--            </div>-->
 <!--            <div class="group">-->
 <!--              <div class="overlap-group">-->
 <!--                <div class="rectangle"></div>-->
 <!--                <div class="div">-->
-<!--                  <input type="text" placeholder=" 아이디" name="uid"/>-->
+<!--                  <input type="text" placeholder=" 아이디" />-->
 <!--                </div>-->
 <!--                <div class="rectangle-2">-->
-<!--                  <button type="button" class="btn btn-kakao" style="width: 100%; height: 100%;"><i-->
-<!--                      class="fa-solid fa-comment" style="color: #050400"></i-->
-<!--                  >&nbsp;&nbsp;kakao 로그인-->
-<!--                  </button>-->
+<!--                  <button type="button" class="btn btn-kakao" style="width: 100%; height: 100%;"><i class="fa-solid fa-comment" style="color: #050400"></i-->
+<!--                  >&nbsp;&nbsp;kakao 로그인</button>-->
 <!--                </div>-->
+
+<!--                <div class="rectangle-5">-->
+<!--                  <button type="button" class="btn btn-github" style="width: 100%; height: 100%; color: #ffffff; background-color: #3d3d3d;"><i class="fa-brands fa-github" style="color: #e8e8e8;"></i>&nbsp;&nbsp;github 로그인</button>-->
+<!--                </div>-->
+
+<!--                <div class="rectangle-6">-->
+<!--                  <button type="button" class="btn btn-github" style="width: 100%; height: 100%; color: #050400;"><i class="fa-brands fa-google"></i>&nbsp;&nbsp;google 로그인</button>-->
+<!--                </div>-->
+
 <!--                <div class="rectangle-3">-->
-<!--                  <button type="submit" class="btn btn-secondary"-->
-<!--                          style="width: 100%; height: 100%;">로그인-->
-<!--                  </button>-->
+<!--                  <button type="submit" class="btn btn-secondary" style="width: 100%; height: 100%;">로그인</button>-->
 <!--                </div>-->
 <!--                <div class="rectangle-4">-->
-<!--                  <input type="password" placeholder=" 비밀번호" name="password"/>-->
+<!--                  <input type="password" placeholder=" 비밀번호" />-->
 <!--                </div>-->
 <!--                <div>-->
-<!--                  <a href="api/user/register">-->
-<!--                    <div class="text-wrapper-2" id="register">회원가입&nbsp;</div>-->
+<!--                  <a href="register.html">-->
+<!--                    <div class="text-wrapper-2">회원가입&nbsp;</div>-->
 <!--                  </a>-->
 <!--                  <div class="text-wrapper-3" onclick="find()">아이디/비밀번호 찾기</div>-->
 <!--                </div>-->
+<!--                 <div class="group-2"></div>-->
+<!--                 <div class="text-wrapper-5"></div>-->
 <!--              </div>-->
 <!--            </div>-->
-<!--          </div>-->
+
+
 <!--        </form>-->
 <!--      </div>-->
 <!--    </div>-->
 
-    <div class="col-3 mb-3" style="left: 3%; height: 100%;">
-      <div>
-        <form action="#" method="post">
-          <div class="login">
-            <div class="div">
-              <input type="email" name="email" placeholder=" 아이디" />
-            </div>
-            <div class="group">
-              <div class="overlap-group">
-                <div class="rectangle"></div>
-                <div class="div">
-                  <input type="text" placeholder=" 아이디" />
-                </div>
-                <div class="rectangle-2">
-                  <button type="button" class="btn btn-kakao" style="width: 100%; height: 100%;"><i class="fa-solid fa-comment" style="color: #050400"></i
-                  >&nbsp;&nbsp;kakao 로그인</button>
-                </div>
+<!--    <div style="margin: 35% 0 10% 0;">-->
+<!--      <span style="margin: 3%; color: black; font-size: medium;">트랜드 랭킹</span>-->
+<!--    </div>-->
+<!--    <table class="table">-->
+<!--      <tbody>-->
+<!--      <tr th:each="trend, iterStat : ${trends}">-->
+<!--        <td>-->
+<!--          <a th:href="@{/search/{keyword}(keyword=${trend.keyword})}"-->
+<!--             style="text-decoration:none; color: inherit;">-->
+<!--            <span class="badge bg-warning" th:text="${iterStat.index + 1}"></span>-->
+<!--            <span th:text="${trend.keyword}">@키워드</span>-->
+<!--          </a>-->
+<!--        </td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--  </div>-->
+<!--</div>-->
+<!--</div>-->
 
-                <div class="rectangle-5">
-                  <button type="button" class="btn btn-github" style="width: 100%; height: 100%; color: #ffffff; background-color: #3d3d3d;"><i class="fa-brands fa-github" style="color: #e8e8e8;"></i>&nbsp;&nbsp;github 로그인</button>
-                </div>
+<!--&lt;!&ndash; Back to Top &ndash;&gt;-->
+<!--<a href="#" class="btn btn-secondary back-to-top">-->
+<!--  <i class="fa-solid fa-arrow-up"></i>-->
+<!--</a>-->
 
-                <div class="rectangle-6">
-                  <button type="button" class="btn btn-github" style="width: 100%; height: 100%; color: #050400;"><i class="fa-brands fa-google"></i>&nbsp;&nbsp;google 로그인</button>
-                </div>
+<!--&lt;!&ndash; JavaScript Libraries &ndash;&gt;-->
+<!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>-->
+<!--<script src="/static/lib/easing/easing.min.js"></script>-->
+<!--<script src="/static/lib/owlcarousel/owl.carousel.min.js"></script>-->
+<!--<script src="/static/js/main.js"></script>-->
+<!--</body>-->
 
-                <div class="rectangle-3">
-                  <button type="submit" class="btn btn-secondary" style="width: 100%; height: 100%;">로그인</button>
-                </div>
-                <div class="rectangle-4">
-                  <input type="password" placeholder=" 비밀번호" />
-                </div>
-                <div>
-                  <a href="register.html">
-                    <div class="text-wrapper-2">회원가입&nbsp;</div>
-                  </a>
-                  <div class="text-wrapper-3" onclick="find()">아이디/비밀번호 찾기</div>
-                </div>
-                 <div class="group-2"></div>
-                 <div class="text-wrapper-5"></div>
-              </div>
-            </div>
+<!--<script>-->
 
+<!--  // const register = document.getElementById("register");-->
+<!--  // register.addEventListener("click", function () {-->
+<!--  //   location.href = "/register";-->
+<!--  // });-->
 
-        </form>
-      </div>
-    </div>
-
-    <div style="margin: 35% 0 10% 0;">
-      <span style="margin: 3%; color: black; font-size: medium;">트랜드 랭킹</span>
-    </div>
-    <table class="table">
-      <tbody>
-      <tr th:each="trend, iterStat : ${trends}">
-        <td>
-          <a th:href="@{/search/{keyword}(keyword=${trend.keyword})}"
-             style="text-decoration:none; color: inherit;">
-            <span class="badge bg-warning" th:text="${iterStat.index + 1}"></span>
-            <span th:text="${trend.keyword}">@키워드</span>
-          </a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-</div>
-
-<!-- Back to Top -->
-<a href="#" class="btn btn-secondary back-to-top">
-  <i class="fa-solid fa-arrow-up"></i>
-</a>
-
-<!-- JavaScript Libraries -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-<script src="/static/lib/easing/easing.min.js"></script>
-<script src="/static/lib/owlcarousel/owl.carousel.min.js"></script>
-<script src="/static/js/main.js"></script>
-</body>
-
-<script>
-
-  // const register = document.getElementById("register");
-  // register.addEventListener("click", function () {
-  //   location.href = "/register";
-  // });
-
-  function find() {
-    Swal.fire("아이디/비밀번호 찾기 페이지로 이동합니다.");
-  }
-</script>
-</html>
+<!--  function find() {-->
+<!--    Swal.fire("아이디/비밀번호 찾기 페이지로 이동합니다.");-->
+<!--  }-->
+<!--</script>-->
+<!--</html>-->

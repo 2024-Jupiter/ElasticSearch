@@ -121,14 +121,14 @@
     <div class="col-12 mb-3" style="border: 1px #dedede solid; ">
       <div class="contact-form" style="height: 900px; margin-top: 2%;">
         <form id="postForm" action="/api/posts/create" method="post">
-          <div class="control-group">
-
-            <span>카테고리</span>
-
-            <!-- <label for="exampleSelect1" class="form-label mb-4">카테고리 </label> -->
-            <select class="form-control" name="category" style="width: 80%;">
-              <option value="GENERAL">1</option>
-              <option value="NEWS">2</option>
+          <div class="control-group" style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-weight: bold;
+    font-size: larger;
+    margin-left: 0.5rem;">카테고리</span>
+            <select class="form-control" name="category"
+                    style="width: 80%; width: 90%; margin-left: 1.7rem;">
+              <option value="GENERAL">GENERAL</option>
+              <option value="NEWS">NEWS</option>
             </select>
           </div>
           <div class="control-group">
@@ -143,20 +143,17 @@
                                           style="height: 750px;"></textarea>
             <p class="help-block text-danger"></p>
           </div>
-
         </form>
       </div>
       <div>
-
       </div>
     </div>
-
   </div>
 </div>
 <div class="row" style="    justify-content: flex-end;
                 flex-wrap: nowrap;
                 margin: auto;
-                width: 70%;">
+                width: 70%; padding-right: 0.65rem;">
   <button class="btn btn-info py-2 px-4" type="submit" id="save" style="margin-right: 1%;">저장
   </button>
   <button class="btn btn-danger py-2 px-4" type="submit" id="cancel">취소</button>

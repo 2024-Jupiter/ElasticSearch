@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+// test에서 토큰 없으면 Whitelabel Error Page 에러창 뜨는 문제
 @Controller
 @RequestMapping("/api/users")
 public class UserController {

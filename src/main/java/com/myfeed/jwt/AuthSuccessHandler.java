@@ -21,6 +21,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
+        System.out.println("AuthSuccessHandler.onAuthenticationSuccess");
         // accessToken, refreshToken 발급
         String accessToken = jwtTokenUtil.generateToken(authentication.getName());
         //  tokenProvider.generateRefreshToken(authentication, accessToken);

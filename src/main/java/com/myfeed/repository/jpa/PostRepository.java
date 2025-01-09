@@ -9,8 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 내 게시글 페이지 네이션 (동시성)
     @Query("SELECT p FROM Post p WHERE p.user.isDeleted = false")
@@ -31,4 +29,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("UPDATE Post p SET p.likeCount = p.likeCount - 1 WHERE p.id = :id AND p.likeCount > 0")
     void decrementLikeCountById(@Param("id") Long id);
 
+
+    Page<Post> findAll(Pageable pageable);
 }

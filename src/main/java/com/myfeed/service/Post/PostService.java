@@ -5,10 +5,6 @@ import com.myfeed.model.post.PostDto;
 import com.myfeed.model.post.UpdateDto;
 import com.myfeed.model.user.User;
 import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.List;
 
 public interface PostService {
     public static final int PAGE_SIZE = 10;
@@ -20,12 +16,10 @@ public interface PostService {
     Page<Post> getPagedPostsByUserId(int page, User user);
 
     // 게시글 생성
-    //void createPost(Long userId, PostDto postDto) throws IOException;  // 이미지 o
-    Post createPost(Long userId, PostDto postDto); // 이미지 x
+    Long createPost(Long userId, PostDto postDto);
 
     // 게시글 수정
-    //void updatePost(Long id, User user, UpdateDto updateDto) throws IOException;  // 이미지 o
-    void updatePost(Long id, User user, UpdateDto updateDto); // 이미지 x
+    void updatePost(Long id, User user, UpdateDto updateDto);
 
     // 게시글 삭제
     void deletePostById(Long id, User user);
@@ -38,4 +32,6 @@ public interface PostService {
 
     // 좋아요 감소 (동시성)
     void decrementPostLikeCountById(Long id);
+
+    Page<Post> getPagedPosts(int page);
 }
