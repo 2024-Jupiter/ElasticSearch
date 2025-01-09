@@ -13,7 +13,7 @@ public interface ReplyService {
     Reply findByReplyId(Long id);
 
     // 댓글 작성
-    void createReply(Long userId, Long postId, ReplyDto replyDto);
+    Reply createReply(Long userId, Long postId, ReplyDto replyDto);
 
     // 게시글 내의 댓글 리스트 (동시성)
     Page<Reply> getPagedRepliesByPost(int page, Post post);

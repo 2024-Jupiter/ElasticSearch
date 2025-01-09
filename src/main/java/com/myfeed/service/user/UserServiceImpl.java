@@ -5,6 +5,8 @@ import com.myfeed.model.user.UpdateDto;
 import com.myfeed.model.user.User;
 import com.myfeed.repository.jpa.UserRepository;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -90,13 +92,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUserAccessToken(HttpServletResponse response) {
+        //탈퇴 시 쿠키 제거해 redirection 방지
+        Cookie cookie = new Cookie("accessToken", null);
+        cookie.setMaxAge(0);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+    }
+
+    @Override
     public Page<User> getPagedUser(int page, boolean isActive) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE);
         Page<User> userPage = null;
         if (isActive) {
-            userPage = userRepository.findAllByActiveTrue(pageable);
+            userPage = userRepository.findAllByIsActiveTrue(pageable);
         } else {
-            userPage = userRepository.findAllByActiveFalse(pageable);
+            userPage = userRepository.findAllByIsActiveFalse(pageable);
         }
         return null;
     }

@@ -28,7 +28,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler {
 
         //헤더에 쿠키를 포함해 클라이언트에게 전달
         response.addCookie(createCookie("accessToken", accessToken));
-        response.sendRedirect("/api/users/test");
+        response.sendRedirect("/api/users/loginSuccess");
     }
 
     private Cookie createCookie(String key, String value) {

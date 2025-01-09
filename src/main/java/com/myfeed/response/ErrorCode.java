@@ -16,7 +16,7 @@ public enum ErrorCode {
 	LOGIN_ERROR("LOGIN_ERROR", "로그인 중 오류가 발생했습니다. 다시 시도해주세요."),
 
 	//회원가입
-	ID_ALREADY_EXIST("INCLUDED_BLOCK_REPLY", "이미 사용 중인 이메일입니다."),
+	ID_ALREADY_EXIST("ID_ALREADY_EXIST", "이미 사용 중인 이메일입니다."),
 	NICKNAME_ALREADY_EXIST("NICKNAME_ALREADY_EXIST", "이미 사용 중인 닉네임입니다."),
 
 	//아이디, 비밀번호 찾기
@@ -25,7 +25,10 @@ public enum ErrorCode {
 	PROFILE_PHONE_MISMATCH("PROFILE_PHONE_MISMATCH", "휴대폰 번호가 기존 정보와 일치하지 않습니다."),
 
 	// 인증 되지 않은 사용자
-	AUTHENTICATION_REQUIRED("AUTHENTICATION_REQUIRED", "인증되지 않은 사용자입니다."),
+	AUTHENTICATION_REQUIRED("AUTHENTICATION_REQUIRED", "인증 되지 않은 사용자 입니다."),
+
+	// 로그인 하지 않은 사용자
+	LOGIN_REQUIRED("LOGIN_REQUIRED", "로그인 하지 않은 사용자 입니다."),
 
 	/**
 	 * 게시글 Es
@@ -37,8 +40,11 @@ public enum ErrorCode {
 	 */
 	POST_NOT_FOUND("POST_NOT_FOUND", "게시글을 찾을 수 없습니다."),
 	ACCESS_DENIED("ACCESS_DENIED", "이 카테고리는 관리자만 선택 가능 합니다. "),
+
+	// 이미지
 	IMAGE_UPLOAD_FAIL("IMAGE_UPLOAD_FAIL", "이미지 업로드 실패 했습니다."),
 	WRONG_IMAGE_FILE("WRONG_IMAGE_FILE", "잘못된 이미지 파일 형식 입니다."),
+
 	USER_DELETED("USER_DELETED", "삭제된 사용자 입니다."),
 	INCLUDED_DELETED_USER_IN_POST("INCLUDED_DELETED_USER_IN_POST", "삭제된 사용자의 게시글이 포함 되어 있습니다."),
 	INCLUDED_BLOCK_POST("INCLUDED_BLOCK_POST", "차단된 게시글이 포함 되어 있습니다."),

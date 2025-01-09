@@ -35,7 +35,7 @@ public class ReplyServiceImpl implements ReplyService {
     // 댓글 작성
     @Transactional
     @Override
-    public void createReply(Long userId, Long postId, ReplyDto replyDto) {
+    public Reply createReply(Long userId, Long postId, ReplyDto replyDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ExpectedException(ErrorCode.USER_NOT_FOUND));
         Post post = postRepository.findById(postId).orElseThrow(() -> new ExpectedException(ErrorCode.USER_NOT_FOUND));
 
@@ -52,6 +52,7 @@ public class ReplyServiceImpl implements ReplyService {
         Reply savedReply = replyRepository.save(reply);
         eventPublisher.publishEvent(new ReplySyncEvent(savedReply.getId(), "CREATE_OR_UPDATE"));
 
+        return savedReply;
     }
 
     // 게시글 내의 댓글 리스트 (동시성)
