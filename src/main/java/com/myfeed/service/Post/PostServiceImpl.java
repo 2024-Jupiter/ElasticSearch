@@ -13,18 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 @Service
 public class PostServiceImpl implements PostService {
     @Autowired PostRepository postRepository;
     @Autowired UserRepository userRepository;
     @Autowired private ApplicationEventPublisher eventPublisher;
-    @Autowired private ImageService imageService;
 
     // 게시글 가져 오기
     @Override
@@ -32,11 +28,10 @@ public class PostServiceImpl implements PostService {
         return postRepository.findById(id).orElseThrow(() -> new ExpectedException(ErrorCode.POST_NOT_FOUND));
     }
 
-    // 이미지 x
-    // 게시글 작성
+    // 게시글 작성 (postEs로 post 전달)
     @Transactional
     @Override
-    public Post createPost(Long userId, PostDto postDto) {
+    public Long createPost(Long userId, PostDto postDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new  ExpectedException(ErrorCode.USER_NOT_FOUND));
 
         if (postDto.getCategory().equals(Category.NEWS) && user.getRole().equals(Role.USER)) {
@@ -65,7 +60,7 @@ public class PostServiceImpl implements PostService {
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
 
-        return savedPost;
+        return savedPost.getId();
     }
 
     // 이미지 형식 확인
@@ -86,56 +81,7 @@ public class PostServiceImpl implements PostService {
         return images;
     }
 
-    /*
-    // 게시글 작성 (postEs로 post 전달)
-    // 이미지 o
-    @Transactional
-    @Override
-    public void createPost(Long userId, PostDto postDto) throws IOException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new  ExpectedException(ErrorCode.USER_NOT_FOUND));
-
-        if (postDto.getCategory().equals(Category.NEWS) && user.getRole().equals(Role.USER)) {
-            throw new ExpectedException(ErrorCode.ACCESS_DENIED);
-        }
-
-        Post post = Post.builder()
-                .user(user).title(postDto.getTitle()).content(postDto.getContent())
-                .category(postDto.getCategory()).status(BlockStatus.NORMAL_STATUS)
-                .viewCount(0).likeCount(0)
-                .build();
-
-        if (!postDto.getImages().isEmpty()) {
-            validateImages(postDto.getImages());
-            imageService.uploadImage(post, postDto.getImages());
-        }
-
-        Post savedPost = postRepository.save(post);
-        eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
-    }
-
-    // 이미지 형식 확인
-    private void validateImages(List<MultipartFile> images) {
-        for (MultipartFile file : images) {
-            String originalFilename = file.getOriginalFilename();
-            if (originalFilename == null || !(originalFilename.toLowerCase().endsWith(".jpg")
-                    || originalFilename.toLowerCase().endsWith(".jpeg")
-                    || originalFilename.toLowerCase().endsWith(".png")
-                    || originalFilename.toLowerCase().endsWith(".gif"))) {
-                throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE); // 유효 하지 않은 확장자
-            }
-
-            String contentType = file.getContentType();
-            if (contentType == null || !(contentType.equalsIgnoreCase("image/jpeg")
-                    || contentType.equalsIgnoreCase("image/png")
-                    || contentType.equalsIgnoreCase("image/gif"))) {
-                throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE); // 유효 하지 않은 MIME 타입
-            }
-        }
-    }
-    */
-
-    // 이미지 x
-    // 게시글 수정
+    // 게시글 수정 (postEs로 post 전달)
     @Transactional
     @Override
     public void updatePost(Long id, User user, UpdateDto updateDto) {
@@ -145,47 +91,23 @@ public class PostServiceImpl implements PostService {
             throw new  ExpectedException(ErrorCode.REPLY_BLOCKED);
         }
 
-//        if (!updateDto.getImages().isEmpty()) {
-//            for (ImageDto imageDto : updateDto.getImages()) {
-//                if (!isValidImageFormat(imageDto)) {
-//                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
-//                }
-//            }
-//        }
-//        List<Image> updatedImages = convertImageDtosToImages(updateDto.getImages(), post);
-//        post.setImages(updatedImages);
+        List<Image> updatedImages = convertImageDtosToImages(updateDto.getImages(), post);
 
         post.setTitle(updateDto.getTitle());
         post.setContent(updateDto.getContent());
-
-        Post savedPost = postRepository.save(post);
-        eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
-    }
-
-    /*
-    // 게시글 수정 (postEs로 post 전달)
-    // 이미지 o
-    @Transactional
-    @Override
-    public void updatePost(Long id, User user, UpdateDto updateDto) throws IOException {
-        Post post = findPostById(id);
-
-        if (post.getStatus() == BlockStatus.BLOCK_STATUS) {
-            throw new  ExpectedException(ErrorCode.REPLY_BLOCKED);
-        }
-
-        post.setTitle(updateDto.getTitle());
-        post.setContent(updateDto.getContent());
+        post.setImages(updatedImages);
 
         if (!updateDto.getImages().isEmpty()) {
-            validateImages(updateDto.getImages());
-            imageService.updateImages(post, updateDto.getImages());
+            for (ImageDto imageDto : updateDto.getImages()) {
+                if (!isValidImageFormat(imageDto)) {
+                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
+                }
+            }
         }
 
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
     }
-     */
 
     // 게시글 삭제
     @Transactional
@@ -194,7 +116,18 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(id);
         eventPublisher.publishEvent(new PostSyncEvent(id, "DELETE"));
     }
+    @Override
+    public Page<Post> getPagedPosts(int page) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
+        Page<Post> posts = postRepository.findAll(pageable);
 
+        for (Post post : posts) {
+            if (post.getStatus() == BlockStatus.BLOCK_STATUS) {
+                throw new ExpectedException(ErrorCode.INCLUDED_BLOCK_POST);
+            }
+        }
+        return posts;
+    }
     // 내 게시글 페이지 네이션
     @Override
     public Page<Post> getPagedPostsByUserId(int page,User user) {
@@ -222,7 +155,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public void incrementPostLikeCountById(Long id) {
         postRepository.updateLikeCountById(id);
-        eventPublisher.publishEvent(new PostSyncEvent(id, "VIEW_COUNT_UP_AND_LIKE_COUNT_UP"));
     }
 
     // 좋아요 감소 (동시성)
@@ -230,6 +162,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void decrementPostLikeCountById(Long id) {
         postRepository.decrementLikeCountById(id);
-        eventPublisher.publishEvent(new PostSyncEvent(id, "VIEW_COUNT_UP_AND_LIKE_COUNT_DOWN"));
     }
+
+
 }

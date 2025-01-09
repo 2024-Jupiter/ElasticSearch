@@ -76,6 +76,7 @@ if (updateBtn) {
 }
 
 const save = document.getElementById('save');
+const cancel = document.getElementById('cancel');
 
 if(save) {
   save.addEventListener('click', function () {
@@ -83,4 +84,9 @@ if(save) {
   });
 }
 
+if (cancel) {
+  cancel.addEventListener('click', function () {
+    history.back()
+  });
+}
 

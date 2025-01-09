@@ -9,6 +9,8 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     UserRepository userRepository;
 
@@ -101,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> getPagedUser(int page, boolean isActive) {
-        Pageable pageable = PageRequest.of(page-1,PAGE_SIZE);
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE);
         Page<User> userPage = null;
         if (isActive) {
             userPage = userRepository.findAllByIsActiveTrue(pageable);
@@ -110,4 +113,11 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public Map<Long, String> findUserNicknameByIds(List<Long> userIds) {
+        return userRepository.findAllById(userIds).stream()
+                .collect(Collectors.toMap(User::getId, User::getNickname));
+    }
+
 }

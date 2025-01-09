@@ -4,6 +4,7 @@ import com.myfeed.model.user.UpdateDto;
 import com.myfeed.model.user.User;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.domain.Page;
 
 public interface UserService {
@@ -32,4 +33,6 @@ public interface UserService {
     void setTempPassword(String email, String tempPassword);
 
     Page<User> getPagedUser(int page, boolean isActive);
+
+    Map<Long, String> findUserNicknameByIds(List<Long> userIds);
 }
