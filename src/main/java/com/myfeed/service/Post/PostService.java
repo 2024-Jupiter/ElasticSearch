@@ -13,7 +13,7 @@ public interface PostService {
     Post findPostById(Long id);
 
     // 내 게시글 페이지 네이션
-    Page<Post> getPagedPostsByUserId(int page, User user);
+    Page<Post> getPagedPostsByUserId(int page, Long userId);
 
     // 게시글 생성
     Long createPost(Long userId, PostDto postDto);
@@ -33,5 +33,6 @@ public interface PostService {
     // 좋아요 감소 (동시성)
     void decrementPostLikeCountById(Long id);
 
+    // 전체 게시글 페이지 네이션 (동시성)
     Page<Post> getPagedPosts(int page);
 }

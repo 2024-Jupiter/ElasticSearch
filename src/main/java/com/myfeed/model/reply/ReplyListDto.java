@@ -1,14 +1,14 @@
-package com.myfeed.model.post;
+package com.myfeed.model.reply;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
-public class PostListDto {
+public class ReplyListDto {
     private Long id;
-    private String title;
     private String content;
     private String author;
     private LocalDateTime createdAt;

@@ -91,19 +91,19 @@ public class PostServiceImpl implements PostService {
             throw new  ExpectedException(ErrorCode.REPLY_BLOCKED);
         }
 
-        List<Image> updatedImages = convertImageDtosToImages(updateDto.getImages(), post);
-
+//        List<Image> updatedImages = convertImageDtosToImages(updateDto.getImages(), post);
+//
         post.setTitle(updateDto.getTitle());
         post.setContent(updateDto.getContent());
-        post.setImages(updatedImages);
-
-        if (!updateDto.getImages().isEmpty()) {
-            for (ImageDto imageDto : updateDto.getImages()) {
-                if (!isValidImageFormat(imageDto)) {
-                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
-                }
-            }
-        }
+//        post.setImages(updatedImages);
+//
+//        if (!updateDto.getImages().isEmpty()) {
+//            for (ImageDto imageDto : updateDto.getImages()) {
+//                if (!isValidImageFormat(imageDto)) {
+//                    throw new ExpectedException(ErrorCode.WRONG_IMAGE_FILE);
+//                }
+//            }
+//        }
 
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
@@ -116,6 +116,8 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(id);
         eventPublisher.publishEvent(new PostSyncEvent(id, "DELETE"));
     }
+
+    // 전체 게시글 페이지 네이션 (동시성)
     @Override
     public Page<Post> getPagedPosts(int page) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
@@ -130,9 +132,9 @@ public class PostServiceImpl implements PostService {
     }
     // 내 게시글 페이지 네이션
     @Override
-    public Page<Post> getPagedPostsByUserId(int page,User user) {
+    public Page<Post> getPagedPostsByUserId(int page, Long userId) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
-        Page<Post> posts = postRepository.findPagedPostsByUserId(user, pageable);
+        Page<Post> posts = postRepository.findPagedPostsByUserId(userId, pageable);
 
         for (Post post : posts) {
             if (post.getStatus() == BlockStatus.BLOCK_STATUS) {
@@ -163,6 +165,4 @@ public class PostServiceImpl implements PostService {
     public void decrementPostLikeCountById(Long id) {
         postRepository.decrementLikeCountById(id);
     }
-
-
 }
