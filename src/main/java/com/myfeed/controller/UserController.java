@@ -153,7 +153,7 @@ public class UserController {
         if (userService.findByNickname(nickname) != null) {
             throw new ExpectedException(ErrorCode.NICKNAME_ALREADY_EXIST);
         }
-        messagemap.put("message", "닉네임 " + nickname + "을 사용할 수 있습니다.");
+        messagemap.put("message", "닉네임(" + nickname + ")을 사용할 수 있습니다.");
         return messagemap;
     }
 
