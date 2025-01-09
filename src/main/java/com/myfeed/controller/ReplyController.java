@@ -39,16 +39,10 @@ public class ReplyController {
     // 댓글 작성 (POST 요청)
     @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> createReply(@PathVariable Long id,
-                                                           @CurrentUser User user,
+    public ResponseEntity<Map<String, Object>> createReply(@CurrentUser User user,
                                                            @RequestParam Long postId,
                                                            @Valid @RequestBody ReplyDto replyDto) {
-        Reply reply = replyService.findByReplyId(id);
-        if (!reply.getUser().equals(user)) {
-            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
-        }
-
-        replyService.createReply(user.getId(), postId, replyDto);
+        Reply reply = replyService.createReply(user.getId(), postId, replyDto);
         Map<String, Object> response = new HashMap<>();
 
         String redirectUrl = "/api/posts/detail/" + reply.getPost().getId();

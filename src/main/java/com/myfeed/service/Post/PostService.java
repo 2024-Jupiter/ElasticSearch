@@ -21,7 +21,7 @@ public interface PostService {
 
     // 게시글 생성
     //void createPost(Long userId, PostDto postDto) throws IOException;  // 이미지 o
-    void createPost(Long userId, PostDto postDto); // 이미지 x
+    Post createPost(Long userId, PostDto postDto); // 이미지 x
 
     // 게시글 수정
     //void updatePost(Long id, User user, UpdateDto updateDto) throws IOException;  // 이미지 o

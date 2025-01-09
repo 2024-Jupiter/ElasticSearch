@@ -48,16 +48,12 @@ public class PostController {
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> createPost(@CurrentUser User user,
                                                           @Valid @RequestBody PostDto postDto) {
-//        Post post = postService.findPostById(id);
-//        if (!post.getUser().equals(user)) {
-//            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
-//        }
 
-        postService.createPost(user.getId(), postDto);
+        Post post =postService.createPost(user.getId(), postDto);
         Map<String, Object> response = new HashMap<>();
 
-//        String redirectUrl = "/api/posts/detail/" + id;
-//        response.put("redirectUrl",redirectUrl);
+        String redirectUrl = "/api/posts/detail/" + post.getId();
+        response.put("redirectUrl",redirectUrl);
         response.put("success", true);
         response.put("message", "게시글이 작성 되었습니다.");
 
@@ -90,7 +86,7 @@ public class PostController {
 
     // 내 게시글 페이지 네이션
     @ResponseBody
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{id}/users")
     public ResponseEntity<Map<String, Object>> myPostList(@PathVariable Long id,
                                                           @RequestParam(name="p", defaultValue = "1") int page,
                                                           @CurrentUser User user, HttpSession session) {

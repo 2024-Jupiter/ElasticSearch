@@ -36,7 +36,7 @@ public class PostServiceImpl implements PostService {
     // 게시글 작성
     @Transactional
     @Override
-    public void createPost(Long userId, PostDto postDto) {
+    public Post createPost(Long userId, PostDto postDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new  ExpectedException(ErrorCode.USER_NOT_FOUND));
 
         if (postDto.getCategory().equals(Category.NEWS) && user.getRole().equals(Role.USER)) {
@@ -64,6 +64,8 @@ public class PostServiceImpl implements PostService {
 
         Post savedPost = postRepository.save(post);
         eventPublisher.publishEvent(new PostSyncEvent(savedPost.getId(), "CREATE_OR_UPDATE"));
+
+        return savedPost;
     }
 
     // 이미지 형식 확인
@@ -220,6 +222,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void incrementPostLikeCountById(Long id) {
         postRepository.updateLikeCountById(id);
+        eventPublisher.publishEvent(new PostSyncEvent(id, "VIEW_COUNT_UP_AND_LIKE_COUNT_UP"));
     }
 
     // 좋아요 감소 (동시성)
@@ -227,5 +230,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public void decrementPostLikeCountById(Long id) {
         postRepository.decrementLikeCountById(id);
+        eventPublisher.publishEvent(new PostSyncEvent(id, "VIEW_COUNT_UP_AND_LIKE_COUNT_DOWN"));
     }
 }
