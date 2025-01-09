@@ -90,3 +90,27 @@ if (cancel) {
   });
 }
 
+const googleLogin = document.getElementById('googleLogin');
+const githubLogin = document.getElementById('githubLogin');
+const kakaoLogin = document.getElementById('kakaoLogin');
+
+if(kakaoLogin) {
+  kakaoLogin.addEventListener('click', function () {
+    location.href = 'http://localhost:8070/oauth2/authorization/kakao';
+  })
+}
+
+
+if(googleLogin) {
+googleLogin.addEventListener('click', function () {
+location.href = 'http://localhost:8070/oauth2/authorization/google';
+})
+}
+
+
+
+if(githubLogin) {
+githubLogin.addEventListener('click', function () {
+location.href = 'http://localhost:8070/oauth2/authorization/github';
+})
+}
