@@ -70,7 +70,7 @@ public class PostController {
     @ResponseBody
     @PostMapping("create")
     public ResponseEntity<Map<String, Object>> createPost(@PathVariable Long id, @CurrentUser User user,
-                                                          @Valid @RequestBody PostDto postDto) throws IOException {
+                                                          @Valid PostDto postDto) throws IOException {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
@@ -191,7 +191,7 @@ public class PostController {
     @PatchMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id,
                                                           @CurrentUser User user,
-                                                          @Valid @RequestBody UpdateDto updateDto) {
+                                                          @Valid UpdateDto updateDto) {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
@@ -214,7 +214,7 @@ public class PostController {
     @ResponseBody
     @PatchMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id, @CurrentUser User user,
-                                                          @Valid @RequestBody UpdateDto updateDto) {
+                                                          @Valid UpdateDto updateDto) {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);

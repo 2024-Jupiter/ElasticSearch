@@ -49,7 +49,7 @@ public class ReportController {
     @ResponseBody
     @PostMapping("/posts/{postId}")
     public ResponseEntity<Map<String, Object>> reportPost(@PathVariable Long postId,
-                                                          @Valid @RequestBody ReportDto reportDto) {
+                                                          @Valid ReportDto reportDto) {
         Report report = reportService.reportPost(postId, reportDto);
         Map<String, Object> response = new HashMap<>();
 
@@ -72,7 +72,7 @@ public class ReportController {
     @ResponseBody
     @PostMapping("/replies/{replyId}")
     public ResponseEntity<Map<String, Object>> reportReply(@PathVariable Long replyId,
-                                                           @Valid @RequestBody ReportDto reportDto) {
+                                                           @Valid ReportDto reportDto) {
         Report report = reportService.reportReply(replyId, reportDto);
         Reply reply = replyService.findByReplyId(replyId);
         Map<String, Object> response = new HashMap<>();
