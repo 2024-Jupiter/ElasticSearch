@@ -25,7 +25,10 @@ public enum ErrorCode {
 	PROFILE_PHONE_MISMATCH("PROFILE_PHONE_MISMATCH", "휴대폰 번호가 기존 정보와 일치하지 않습니다."),
 
 	// 인증 되지 않은 사용자
-	AUTHENTICATION_REQUIRED("AUTHENTICATION_REQUIRED", "인증되지 않은 사용자입니다."),
+	AUTHENTICATION_REQUIRED("AUTHENTICATION_REQUIRED", "인증 되지 않은 사용자 입니다."),
+
+	// 로그인 하지 않은 사용자
+	LOGIN_REQUIRED("LOGIN_REQUIRED", "로그인 하지 않은 사용자 입니다."),
 
 	/**
 	 * 게시글 Es

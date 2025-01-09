@@ -49,7 +49,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> createPost(@CurrentUser User user,
                                                           @Valid @RequestBody PostDto postDto) {
 
-        Post post =postService.createPost(user.getId(), postDto);
+        Post post = postService.createPost(user.getId(), postDto);
         Map<String, Object> response = new HashMap<>();
 
         String redirectUrl = "/api/posts/detail/" + post.getId();

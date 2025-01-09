@@ -40,8 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/posts/detail/*", "api/replies/posts/detail/*" ,"/api/postEs/**" ).permitAll() // 게시글, 댓글 상세 보기 / 추천 게시글, 검색 게시글 목록 보기 및 상세 보기
                         .requestMatchers("/css/**","/js/**","/lib/**","/scss/**", "/img/**", "/favicon.ico" ).permitAll()
                         .requestMatchers("/api/posts/**", "/api/replies/**").hasAuthority(String.valueOf(Role.USER)) // 로그인한 사용자만 사용 가능
-                        .requestMatchers(HttpMethod.POST, "/api/admin/reports/posts/*").hasAuthority(String.valueOf(Role.USER))
-                        .requestMatchers(HttpMethod.POST, "/api/admin/reports/replies/*").hasAuthority(String.valueOf(Role.USER))
+                        .requestMatchers(HttpMethod.POST, "/api/admin/reports/posts/*", "/api/admin/reports/replies/*").hasAuthority(String.valueOf(Role.USER))
                         .requestMatchers("/api/admin/users/**", "/api/admin/users", "/api/admin/reports/**").hasAuthority(String.valueOf(Role.ADMIN))
                         .anyRequest().authenticated()
                 )
