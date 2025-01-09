@@ -148,9 +148,8 @@ function sendNumber() {
     $.ajax({
       url: '/api/send-sms/send-authcode',
       type: 'POST',
-      data: JSON.stringify ({phoneNumber: cleanedPhoneNum}),
+      data: {phoneNumber: cleanedPhoneNum},
       dataType: 'json',
-      contentType: 'application/json',
       success: function (data) {
         console.log(data);
         if (data.state === 'success') {

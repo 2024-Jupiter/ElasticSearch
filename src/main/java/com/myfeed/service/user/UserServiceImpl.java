@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(hashedPwd);
         user.setUsername(updateDto.getUname());
         user.setNickname(updateDto.getNickname());
-        user.setProfileImage(updateDto.getProfileImage());
+        // user.setProfileImage(updateDto.getProfileImage());
         userRepository.save(user);
     }
 
