@@ -19,7 +19,9 @@ public class PostDetailDto {
     private String title;
     private String content;
     private Category category;
-    private List<String> images = new ArrayList<>();
+    // 이미지 업로드 시 필요
+    //private List<String> images = new ArrayList<>();
+    private List<ImageDto> images = new ArrayList<>();
     private int viewCount;
     private int likeCount;
     private LocalDateTime earliestTime;
@@ -35,7 +37,13 @@ public class PostDetailDto {
                 ? post.getCreatedAt()
                 : post.getUpdatedAt();
 
+        // 이미지 업로드 시 필요
+        /*
         this.images = post.getImages().stream()
                 .map(Image::getImageSrc).toList();
+         */
+        this.images = post.getImages().stream()
+                .map(ImageDto::new)
+                .toList();
     }
 }

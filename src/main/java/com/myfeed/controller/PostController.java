@@ -42,29 +42,6 @@ public class PostController {
         return "api/posts/create";
     }
 
-    // 게시글 작성
-    // 이미지 o
-    @ResponseBody
-    @PostMapping("create")
-    public ResponseEntity<Map<String, Object>> createPost(@PathVariable Long id, @CurrentUser User user,
-                                                          @Valid @RequestBody PostDto postDto) throws IOException {
-        Post post = postService.findPostById(id);
-        if (!post.getUser().equals(user)) {
-            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
-        }
-
-        postService.createPost(user.getId(), postDto);
-        Map<String, Object> response = new HashMap<>();
-
-        String redirectUrl = "/api/posts/detail/" + id;
-        response.put("redirectUrl",redirectUrl);
-        response.put("success", true);
-        response.put("message", "게시글이 작성 되었습니다.");
-
-        return ResponseEntity.ok(response);
-    }
-
-    /*
     // 이미지 x
     // 게시글 작성
     @ResponseBody
@@ -86,7 +63,30 @@ public class PostController {
 
         return ResponseEntity.ok(response);
     }
-     */
+
+    /*
+    // 게시글 작성
+    // 이미지 o
+    @ResponseBody
+    @PostMapping("create")
+    public ResponseEntity<Map<String, Object>> createPost(@PathVariable Long id, @CurrentUser User user,
+                                                          @Valid @RequestBody PostDto postDto) throws IOException {
+        Post post = postService.findPostById(id);
+        if (!post.getUser().equals(user)) {
+            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
+        }
+
+        postService.createPost(user.getId(), postDto);
+        Map<String, Object> response = new HashMap<>();
+
+        String redirectUrl = "/api/posts/detail/" + id;
+        response.put("redirectUrl",redirectUrl);
+        response.put("success", true);
+        response.put("message", "게시글이 작성 되었습니다.");
+
+        return ResponseEntity.ok(response);
+    }
+    */
 
     // 내 게시글 페이지 네이션
     @ResponseBody
@@ -185,12 +185,13 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
-    // 이미지 o
+    // 이미지 x
     // 게시글 수정
     @ResponseBody
     @PatchMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id, @CurrentUser User user,
-                                                          @Valid @RequestBody UpdateDto updateDto) throws IOException {
+    public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id,
+                                                          @CurrentUser User user,
+                                                          @Valid @RequestBody UpdateDto updateDto) {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
@@ -208,12 +209,11 @@ public class PostController {
     }
 
     /*
-    // 이미지 x
+    // 이미지 o
     // 게시글 수정
     @ResponseBody
     @PatchMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id,
-                                                          @CurrentUser User user,
+    public ResponseEntity<Map<String, Object>> updatePost(@PathVariable Long id, @CurrentUser User user,
                                                           @Valid @RequestBody UpdateDto updateDto) {
         Post post = postService.findPostById(id);
         if (!post.getUser().equals(user)) {

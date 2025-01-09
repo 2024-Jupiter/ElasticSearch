@@ -28,5 +28,7 @@ public class PostDto {
     @NotNull(message = "게시글 유형을 선택 하세요.")
     private Category category;
 
-    private List<MultipartFile> images = new ArrayList<>();
+    // 이미지 업로드 시 필요
+    //private List<MultipartFile> images = new ArrayList<>();
+    private List<ImageDto> images = new ArrayList<>();
 }
