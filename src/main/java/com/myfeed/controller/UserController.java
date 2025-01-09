@@ -118,7 +118,15 @@ public class UserController {
                          Model model) {
         Map<String, Object> messagemap = new HashMap<>();
         model.addAttribute("user", user);
-        Page<Post> posts = postService.getPagedPostsByUserId(page, user.getId());
+        Page<Post> posts = postService.getPagedPostsByUserId(page, user);
+
+        List<Post> p = posts.getContent();
+        for (Post post : p) {
+            System.out.println("User ID: " + post.getUser().getId());
+        }
+        int postCount = p.size();
+        System.out.println("User ID: " + user.getId());
+        System.out.println("Number of posts: " + postCount);
 
         List<PostListDto> postList = posts.getContent().stream().map(post -> {
             return new PostListDto(

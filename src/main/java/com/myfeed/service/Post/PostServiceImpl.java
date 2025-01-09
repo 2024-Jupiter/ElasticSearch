@@ -132,9 +132,9 @@ public class PostServiceImpl implements PostService {
     }
     // 내 게시글 페이지 네이션
     @Override
-    public Page<Post> getPagedPostsByUserId(int page, Long userId) {
+    public Page<Post> getPagedPostsByUserId(int page, User user) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
-        Page<Post> posts = postRepository.findPagedPostsByUserId(userId, pageable);
+        Page<Post> posts = postRepository.findPagedPostsByUserId(user, pageable);
 
         for (Post post : posts) {
             if (post.getStatus() == BlockStatus.BLOCK_STATUS) {
