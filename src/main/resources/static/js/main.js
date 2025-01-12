@@ -34,54 +34,6 @@
     return false;
   });
 
-  // Vendor carousel
-  // $('.vendor-carousel').owlCarousel({
-  //   loop: true,
-  //   margin: 29,
-  //   nav: false,
-  //   autoplay: true,
-  //   smartSpeed: 1000,
-  //   responsive: {
-  //     0: {
-  //       items: 2,
-  //     },
-  //     576: {
-  //       items: 3,
-  //     },
-  //     768: {
-  //       items: 4,
-  //     },
-  //     992: {
-  //       items: 5,
-  //     },
-  //     1200: {
-  //       items: 6,
-  //     },
-  //   },
-  // });
-
-  // Related carousel
-  // $('.related-carousel').owlCarousel({
-  //   loop: true,
-  //   margin: 29,
-  //   nav: false,
-  //   autoplay: true,
-  //   smartSpeed: 1000,
-  //   responsive: {
-  //     0: {
-  //       items: 1,
-  //     },
-  //     576: {
-  //       items: 2,
-  //     },
-  //     768: {
-  //       items: 3,
-  //     },
-  //     992: {
-  //       items: 4,
-  //     },
-  //   },
-  // });
 
   // Product Quantity
   $('.quantity button').on('click', function () {
@@ -150,9 +102,9 @@ function sendNumber() {
       type: 'POST',
       data: {phoneNumber: cleanedPhoneNum},
       dataType: 'json',
-      success: function (data) {
-        console.log(data);
-        if (data.state === 'success') {
+      success: function (response) {
+        console.log(response.data);
+        if (response.status === 'success') {
           Swal.fire({
             icon: 'success',
             html: '입력하신 휴대폰 번호로 <br> 인증번호 6자리가 전송되었습니다.',
@@ -161,6 +113,7 @@ function sendNumber() {
           document.getElementById('authNumRes').removeAttribute('disabled');
           document.getElementById('authNumReq').setAttribute('disabled', true);
           document.getElementById('phone').setAttribute('readonly', true);
+          document.getElementById('authCode').value = response.data.authCode;
         } else {
           Swal.fire({
             icon: 'warning',
@@ -185,6 +138,27 @@ function sendNumber() {
     });
   }
 }
+
+document.getElementById('authNumRes').addEventListener('click', checkCode);
+let sendCode = document.getElementById('authCode').value;
+let userCode = document.getElementById('userCode').value;
+function checkCode() {
+  if (sendCode === userCode) {
+    Swal.fire({
+      icon: 'success',
+      text: '휴대폰 인증이 완료되었습니다.',
+      ...swalConfig,
+    })
+    document.getElementById('authNumRes').setAttribute('disabled', true);
+  } else {
+    Swal.fire({
+      icon: 'warning',
+      text: '인증번호가 일치하지 않습니다.',
+      ...swalConfig,
+    });
+  }
+}
+
 
 // 이메일 유효성, 중복 검사
 document

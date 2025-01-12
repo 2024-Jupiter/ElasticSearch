@@ -134,7 +134,7 @@
   <div class="row border-top pt-3" style="margin: auto;
     width: 70%;
     justify-content: flex-start; height: 600px;">
-    <div th:text="${post.content}" style="font-size: large; color: black;"></div>
+    <div id="content" th:text="${post.content}" style="font-size: large; color: black;"></div>
   </div>
 </div>
 
@@ -142,6 +142,7 @@
 <div class="container-fluid pt-5">
   <div  style="margin: auto; width: 70%; justify-content: flex-start;" class="row border-top pt-3">
     <h2>댓글</h2>
+    <br>
     <ul>
       <li th:each="reply: ${replies}">
   <p th:text="${reply.nickname} + ': ' + ${reply.content}"></p>
@@ -197,8 +198,13 @@
 
 
 <!-- Template Javascript -->
-<script src="/js/home.js"></script>
+<script src="/js/home.js">
+
+
+
+</script>
 
 
 </body>
+
 </html>

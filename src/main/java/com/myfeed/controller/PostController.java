@@ -59,11 +59,6 @@ public class PostController {
             throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
         }
         re.addAttribute("id",id);
-        String redirectUrl = "/api/posts/detail/" + id;
-        response.put("redirectUrl", redirectUrl);
-        response.put("success", true);
-        response.put("message", "게시글이 작성 되었습니다.");
-
         return "redirect:/api/posts/detail";
     }
 
@@ -128,7 +123,9 @@ public class PostController {
 
         PostDetailDto postDetailDto = new PostDetailDto(post);
 
-        Page<Reply> replies = replyService.getPagedRepliesByPost(page, post.getId());
+        Page<Reply> replies = replyService.getPagedRepliesByPost(page, id);
+
+
         replies.getContent().forEach(reply -> {
             if (reply.getStatus() == BlockStatus.BLOCK_STATUS) {
                 reply.setContent("차단된 댓글 입니다.");
@@ -138,6 +135,7 @@ public class PostController {
         List<ReplyDetailDto> replyDetailDto = replies.getContent().stream()
                 .map(ReplyDetailDto::new)
                 .toList();
+        System.out.println("list" + replyDetailDto);
 
         int totalPages = replies.getTotalPages();
         int startPage = (int) Math.ceil((page - 0.5) / postService.PAGE_SIZE - 1) * postService.PAGE_SIZE + 1;
@@ -147,6 +145,7 @@ public class PostController {
             pageList.add(i);
         }
 
+        model.addAttribute("id", id);
         model.addAttribute("post", postDetailDto);
         model.addAttribute("replies", replyDetailDto);
         model.addAttribute("repliesCount", replyDetailDto.size());

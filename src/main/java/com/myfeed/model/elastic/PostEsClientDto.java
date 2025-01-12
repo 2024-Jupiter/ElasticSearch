@@ -1,6 +1,7 @@
 package com.myfeed.model.elastic;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.myfeed.model.elastic.post.PostEs;
 import com.myfeed.model.reply.ReplyEs;
 import com.myfeed.model.post.Category;
 
@@ -30,4 +31,15 @@ public class PostEsClientDto {
     private List<ReplyEs> replies;
     private String _class;
     private Double score;
+
+
+    public PostEsClientDto(PostEs postEs) {
+        this.id = postEs.getId();
+        this.nickname = postEs.getNickname();
+        this.title = postEs.getTitle();
+        this.content = postEs.getContent();
+        this.viewCount = postEs.getViewCount();
+//        this.likeCount = postEs.getLikeCount();
+        this.createdAt = String.valueOf(postEs.getCreatedAt());
+    }
 }

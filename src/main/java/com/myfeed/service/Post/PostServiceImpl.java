@@ -28,6 +28,8 @@ public class PostServiceImpl implements PostService {
         return postRepository.findById(id).orElseThrow(() -> new ExpectedException(ErrorCode.POST_NOT_FOUND));
     }
 
+
+
     // 게시글 작성 (postEs로 post 전달)
     @Transactional
     @Override
@@ -132,9 +134,9 @@ public class PostServiceImpl implements PostService {
     }
     // 내 게시글 페이지 네이션
     @Override
-    public Page<Post> getPagedPostsByUserId(int page, User user) {
+    public Page<Post> getPagedPostsByUserId(int page, Long userId) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
-        Page<Post> posts = postRepository.findPagedPostsByUserId(user, pageable);
+        Page<Post> posts = postRepository.findPagedPostsByUserId(pageable, userId);
 
         for (Post post : posts) {
             if (post.getStatus() == BlockStatus.BLOCK_STATUS) {

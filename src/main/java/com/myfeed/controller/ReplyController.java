@@ -42,19 +42,20 @@ public class ReplyController {
     @PostMapping("/create")
     public String createReply(@CurrentUser User user, @RequestParam Long postId,
                               @Valid ReplyDto replyDto, RedirectAttributes re) {
+        System.out.println("댓글" + postId);
         Map<String, Object> response = new HashMap<>();
         Long id = replyService.createReply(user.getId(), postId, replyDto);
         Reply reply = replyService.findByReplyId(id);
-        if (!reply.getUser().equals(user)) {
-            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
-        }
-        re.addAttribute("id",id);
+//        if (!reply.getUser().equals(user)) {
+//            throw new ExpectedException(ErrorCode.AUTHENTICATION_REQUIRED);
+//        }
+        re.addAttribute("id",postId);
         String redirectUrl = "/api/posts/detail/" + id;
         response.put("redirectUrl", redirectUrl);
         response.put("success", true);
         response.put("message", "댓글이 작성 되었습니다.");
 
-        return "board/test";
+        return "redirect:/api/posts/detail";
     }
 
     // 게시글 내의 댓글 페이지 네이션 (동시성)

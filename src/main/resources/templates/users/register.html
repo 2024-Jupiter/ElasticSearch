@@ -125,7 +125,8 @@
             <div class="col-md-7 form-group">
               <div class="check-group">
                 <input class="form-control" type="text" maxlength="6"
-                       placeholder="전송된 인증번호 6자리를 입력해 주세요." pattern="[0-9]+" style="width: 80%;">
+                       placeholder="전송된 인증번호 6자리를 입력해 주세요." pattern="[0-9]+" style="width: 80%;" id="userCode">
+                <input type="hidden" value="" id="authCode">
                 <button class="btn btn-info" id="authNumRes" type="button"
                         disabled="true">확인
                 </button>

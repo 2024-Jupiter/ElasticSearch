@@ -88,26 +88,101 @@ if (cancel) {
   });
 }
 
-const kakaoLogin = document.getElementById('kakaoLogin');
-
-if (kakaoLogin) {
-  kakaoLogin.addEventListener('click', function () {
-    location.href = 'https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=c597f9b416fd429ed7553dc435b36b4e&scope=profile_nickname%20account_email%20profile_image&state=gS_bYTJC6mOHREv00p1lCuf_0NU0tfbfo0d32IhC5ZE%3D&redirect_uri=http://localhost:8070/login/oauth2/code/kakao&code_challenge=-KAW5YxxqdgclS6bpBiYplEhuTfbmIOek82eMd6T8Bo&code_challenge_method=S256';
-  })
-}
-
-const githubLogin = document.getElementById('githubLogin');
-
-if (githubLogin) {
-  githubLogin.addEventListener('click', function () {
-    location.href = 'https://github.com/login/oauth/authorize?response_type=code&client_id=Ov23liOpRJ1khYSHqgQj&scope=user&state=fU4Eg1aLV8XJrRT73FR085vVfPtGEEPtEKhjwZi7oq8%3D&redirect_uri=http://localhost:8070/login/oauth2/code/github';
-  })
-}
-
 const googleLogin = document.getElementById('googleLogin');
-
-if (googleLogin) {
-  googleLogin.addEventListener('click', function () {
-    location.href = 'https://github.com/login/oauth/authorize?response_type=code&client_id=Ov23liOpRJ1khYSHqgQj&scope=user&state=fU4Eg1aLV8XJrRT73FR085vVfPtGEEPtEKhjwZi7oq8%3D&redirect_uri=http://localhost:8070/login/oauth2/code/github';
+const githubLogin = document.getElementById('githubLogin');
+const kakaoLogin = document.getElementById('kakaoLogin');
+if(kakaoLogin) {
+  kakaoLogin.addEventListener('click', function () {
+    location.href = 'http://localhost:8070/oauth2/authorization/kakao';
   })
 }
+if(googleLogin) {
+  googleLogin.addEventListener('click', function () {
+    location.href = 'http://localhost:8070/oauth2/authorization/google';
+  })
+}
+if(githubLogin) {
+  githubLogin.addEventListener('click', function () {
+    location.href = 'http://localhost:8070/oauth2/authorization/github';
+  })
+}
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  let user = document.getElementById('esLoad').value
+
+  if (user == 'Guest') {
+    loadPosts(2);
+  } else {
+    loadPosts(4);
+  }
+
+  function loadPosts(page) {
+
+
+    $.ajax({
+      url: "/api/search/posts/recent", // Spring 매핑 경로와 동일하게 설정
+      type: "GET",
+      data: {p: page},
+      success: function (response) {
+        console.log(response)
+        console.log(response.data)
+        if (response.status == 'success' && response.data.postList) {
+          renderPosts(response.data.postList);
+        } else {
+          console.error("Invalid response structure:", response.data);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error loading posts:", error);
+      },
+    });
+
+    function renderPosts(postList) {
+      const postListElement = document.getElementById("post-list");
+      postListElement.innerHTML = ""; // Clear existing content
+      postList.forEach(post => {
+        const createdAt = new Date(post.createdAt);
+        const row = `
+                <tr>
+                    <td style="width: 55%; text-align: left">
+                        <a href="/api/search/posts/${post.id}">${post.title}</a>
+                    </td>
+                    <td style="width: 10%;">${post.author || "익명"}</td>
+                    <td style="width: 10%;">
+
+            ${createdAt.toLocaleDateString()}<br>
+              ${createdAt.toLocaleTimeString()}
+</td>
+                </tr>`;
+        postListElement.insertAdjacentHTML("beforeend", row);
+      });
+    }
+
+    function renderPagination(pageList, currentPage, totalPages) {
+      const paginationElement = document.getElementById("pagination");
+      paginationElement.innerHTML = ""; // Clear existing content
+
+      pageList.forEach(page => {
+        const activeClass = page === currentPage ? "active" : "";
+        const pageItem = `
+                <li class="page-item ${activeClass}">
+                    <a class="page-link" href="#" data-page="${page}">${page}</a>
+                </li>`;
+        paginationElement.insertAdjacentHTML("beforeend", pageItem);
+      });
+
+      // Add click event to pagination links
+      paginationElement.querySelectorAll(".page-link").forEach(link => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const selectedPage = parseInt(this.getAttribute("data-page"));
+          loadPosts(selectedPage);
+        });
+      });
+    }
+  }
+})
+
+

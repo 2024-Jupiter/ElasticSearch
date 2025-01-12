@@ -1,7 +1,6 @@
 package com.myfeed.repository.jpa;
 
 import com.myfeed.model.post.Post;
-import com.myfeed.model.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,8 +10,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     // 내 게시글 페이지 네이션 (동시성)
-    @Query("SELECT p FROM Post p WHERE p.user.isDeleted = false AND p.user = :user")
-    Page<Post> findPagedPostsByUserId(@Param("user") User user, Pageable pageable);
+//    @Query("SELECT p FROM Post p WHERE p.user.isDeleted = false AND p.user = :user")
+    Page<Post> findPagedPostsByUserId(Pageable pageable, Long userId);
 
     // 조회수 증가 (동시성)
     @Modifying

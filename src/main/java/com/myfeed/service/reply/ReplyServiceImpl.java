@@ -59,7 +59,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public Page<Reply> getPagedRepliesByPost(int page, Long postId) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by("updatedAt").descending());
-        Page<Reply> replies = replyRepository.findPagedRepliesByPost(postId, pageable);
+        Page<Reply> replies = replyRepository.findPagedRepliesByPostId(postId, pageable);
 
         for (Reply reply : replies) {
             if (reply.getStatus() == BlockStatus.BLOCK_STATUS) {

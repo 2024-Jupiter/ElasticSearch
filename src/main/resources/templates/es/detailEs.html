@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>MyFeed</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Free HTML Templates" name="keywords"/>
+  <meta content="Free HTML Templates" name="description"/>
+
+  <!-- Favicon -->
+  <!--  <link href="/static/img/favicon.ico" rel="icon" />-->
+
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet">
+  <!-- Font Awesome -->
+  <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+  />
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+  />
+
+  <!-- Libraries Stylesheet -->
+  <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"/>
+
+  <!--Sweet Alert2-->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="/css/style.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/css/globals.css"/>
+</head>
+
+<body>
+<!-- Topbar Start -->
+<div class="container-fluid">
+  <div class="row bg-secondary py-2 px-xl-5">
+    <div class="col-lg-6 d-none d-lg-block">
+    </div>
+  </div>
+</div>
+<div class="row align-items-center py-3 px-xl-5">
+  <div class="col-lg-3 d-none d-lg-block">
+    <a href="/home">
+      <img src="/img/logo.png" style="margin-left: 5%; width: 40%;">
+    </a>
+  </div>
+  <div class="col-lg-6 col-6 text-left">
+    <form action="">
+      <div class="control-group" style="float: left;">
+        <select class="form-control" name="field">
+          <option value="TITLE">제목</option>
+          <option value="CONTENT">내용</option>
+          <option value="TITLE_CONTENT">제목+내용</option>
+        </select>
+      </div>
+      <div class="input-group" style="width: 80%;">
+        <input
+            type="text"
+            class="form-control"
+            placeholder="검색창"
+        />
+        <div class="input-group-append">
+                <span class="input-group-text bg-transparent text-primary" style="cursor: pointer;"
+                      onclick="document.forms[0].submit()">
+                  <i class="fa fa-search"></i>
+                </span>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+<!-- Topbar End -->
+
+<!-- Navbar Start -->
+<div class="container-fluid mb-2">
+  <div class="row border-top px-xl-5">
+    <div class="col-lg-9">
+      <nav
+          class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0"
+      >
+        <div
+            class="collapse navbar-collapse justify-content-between"
+            id="navbarCollapse"
+        >
+          <div class="navbar-nav mr-auto py-0">
+            <a href="index.html" class="nav-item nav-link active">홈</a>
+            <a href="/api/posts/list" class="nav-item nav-link">자유게시판</a>
+            <a href="/api/posts/list" class="nav-item nav-link">ES게시판</a>
+            <!--            <a th:if="${username != 'Guest' && role == 'ADMIN'}" href="contact.html" class="nav-item nav-link">사용자 관리</a>-->
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+<!-- Navbar End -->
+
+
+<div class="container-fluid pt-5">
+  <div class="row"
+       style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%; height: 60px;">
+    <div>
+      <h4 th:text="${post.title}" style="font-size: x-large; font-weight: bold"></h4>
+    </div>
+    <div style="display: inline-flex; flex-direction: column-reverse;">
+      <p>작성자: <span th:text="${post.nickname}"></span></p><br>
+      <!--      <p>조회수: <span th:text="${post.viewCount}"></span></p><br>-->
+      <p>작성 날짜: <span th:text="${post.createdAt}"></span></p>
+    </div>
+  </div>
+</div>
+
+
+<div class="container-fluid pt-1">
+  <div class="row border-top pt-3" style="margin: auto;
+    width: 80%;
+     height: 800px;">
+    <div id="contentBox" th:utext="${post.content}"></div>
+  </div>
+</div>
+
+
+<div class="container-fluid pt-1">
+  <input type="hidden" th:value="${post.id}" id="postId">
+
+  <!-- 카드 컨테이너 -->
+  <div class="row border-top pt-3" style="margin: auto; width: 70%;">
+
+    <!-- 카드들 -->
+    <div class="d-flex flex-wrap justify-content-between" id="recommendations-container">
+      <!-- 카드 템플릿 -->
+      <div class="card bg-secondary mb-3"
+           style="max-width: 19rem; flex: 1; margin: 10px; color: black; display: none;" id="card-template">
+        <div class="card-header" id="title-template"></div>
+        <div class="card-body">
+          <p class="card-text" id="body-template"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 유사 게시글 없음 메시지 -->
+    <div id="no-recommendations-message"
+         style="display: none; text-align: center; font-size: 18px; color: gray; width: 100%;">
+      유사한 게시글이 없습니다.
+    </div>
+  </div>
+</div>
+
+<!--<div class="container-fluid pt-1">-->
+<!--  <input type="hidden" th:value="${post.id}" id="postId">-->
+<!--  <div class="row border-top pt-3" style="margin: auto;-->
+<!--    width: 70%;-->
+<!--     height: 200px;">-->
+
+<!--    &lt;!&ndash; Add this wrapper to make cards inline horizontally &ndash;&gt;-->
+<!--    <div class="d-flex flex-wrap justify-content-between" id="recommendations-container">-->
+
+<!--      &lt;!&ndash; Card 1 &ndash;&gt;-->
+<!--      <div class="card bg-secondary mb-3"-->
+<!--           style="max-width: 19rem; flex: 1; margin: 10px; color: black;" id="card0">-->
+<!--        <div class="card-header" id="title0"></div>-->
+<!--        <div class="card-body">-->
+
+<!--          <p class="card-text" id="body0"></p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Card 2 &ndash;&gt;-->
+<!--      <div class="card bg-secondary mb-3"-->
+<!--           style="max-width: 19rem; flex: 1; margin: 10px; color: black;" id="card1">-->
+<!--        <div class="card-header" id="title1"></div>-->
+<!--        <div class="card-body">-->
+
+<!--          <p class="card-text" id="body1"></p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      &lt;!&ndash; Card 3 &ndash;&gt;-->
+<!--      <div class="card bg-secondary mb-3"-->
+<!--           style="max-width: 19rem; flex: 1; margin: 10px; color: black;" id="card2">-->
+<!--        <div class="card-header" id="title2"></div>-->
+<!--        <div class="card-body">-->
+
+<!--          <p class="card-text" id="body2"></p>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Card 3 &ndash;&gt;-->
+<!--    <div class="card bg-secondary mb-3"-->
+<!--         style="max-width: 19rem; flex: 1; margin: 10px; color: black;" id="card3">-->
+<!--      <div class="card-header" id="title3"></div>-->
+<!--      <div class="card-body">-->
+<!--        <p class="card-text" id="body3"></p>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div class="d-flex flex-wrap justify-content-between" id="no-recommendations-message"-->
+<!--       style="display: none; text-align: center; font-size: 18px; color: gray;">-->
+<!--    유사한 게시글이 없습니다.-->
+<!--  </div>-->
+
+<!--</div>-->
+
+<!--<div>-->
+  <!--               <span th:each="page : ${pageList}">-->
+  <!--                   <a th:href="@{/api/posts/detail(id=${post.id}, p=${page})}"-->
+  <!--                      th:text="${page}" th:classappend="${page == currentPage} ? 'active' : ''"></a>-->
+  <!--               </span>-->
+<!--</div>-->
+
+<div class="container-fluid pt-5">
+  <div style="margin: auto; width: 70%; justify-content: flex-end;" class="row">
+    <a onclick="history.back()" style="float: right">목록으로 돌아가기</a>
+  </div>
+</div>
+
+
+<!-- </div> -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-secondary back-to-top"
+><i class="fa-solid fa-arrow-up"></i></a>
+
+<!-- Categories End -->
+
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+<script src="/lib/easing/easing.min.js"></script>
+<script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+
+
+<!-- Template Javascript -->
+<script src="/js/elasticsearch.js"></script>
+
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:width="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8"/>
   <title>MyFeed</title>
@@ -59,16 +59,24 @@
   </div>
   <div class="col-lg-6 col-6 text-left">
     <form action="">
-      <div class="input-group">
-        <!-- <input
-          type="text"
-          class="form-control"
-          placeholder="검색창"
-        /> -->
+      <div class="control-group" style="float: left;">
+        <select class="form-control" name="field">
+          <option value="TITLE">제목</option>
+          <option value="CONTENT">내용</option>
+          <option value="TITLE_CONTENT">제목+내용</option>
+        </select>
+      </div>
+      <div class="input-group" style="width: 80%;">
+        <input
+            type="text"
+            class="form-control"
+            placeholder="검색창"
+        />
         <div class="input-group-append">
-          <!-- <span class="input-group-text bg-transparent text-primary" style="cursor: pointer;" onclick="document.forms[0].submit()">
-            <i class="fa fa-search"></i>
-          </span> -->
+                <span class="input-group-text bg-transparent text-primary" style="cursor: pointer;"
+                      onclick="document.forms[0].submit()">
+                  <i class="fa fa-search"></i>
+                </span>
         </div>
       </div>
     </form>
@@ -89,9 +97,9 @@
             id="navbarCollapse"
         >
           <div class="navbar-nav mr-auto py-0">
-            <a href="#" class="nav-item nav-link active">홈</a>
-            <a href="#" class="nav-item nav-link">자유게시판</a>
-            <a href="#" class="nav-item nav-link">ES게시판</a>
+            <a href="index.html" class="nav-item nav-link active">홈</a>
+            <a href="/api/posts/list" class="nav-item nav-link">자유게시판</a>
+            <a href="detail.html" class="nav-item nav-link">ES게시판</a>
           </div>
         </div>
       </nav>
@@ -101,75 +109,63 @@
 <!-- Navbar End -->
 
 
-<div class="container-fluid pt-5">
+<div class="container-fluid pt-1">
   <div class="row"
        style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">
-    <div class="col-12 mb-0">
-
-      <table class="userDetail" style="width: 100%; height: 300px;">
-        <tr>
-          <td rowspan="4" style="width: 30%; text-align: center;">
-            <img th:src="${user.profileImage != null and !user.profileImage.isEmpty() ? user.profileImage : '/img/undraw_profile.svg'}"
-                 style="width: 200px; text-align: center; margin-top: 5%;">
-          </td>
-          <td style="    padding: 3% 0 0 2%;
-                    vertical-align: top;
-                    width: 8%;
-                    font-weight: 700;
-                    color: black;
-                    font-size: large;">
-            <span>이메일</span><br><br>
-            <span>닉네임</span><br><br>
-            <span>휴대폰</span><br><br>
-            <span>이름</span><br><br>
-            <span>가입일자</span><br><br>
-          </td>
-          <td style="padding: 3% 0 0 3%;
-                    vertical-align: top;
-                    font-weight: 700;
-                    font-size: large;">
-            <span th:text="${user.email}">inpou1@naver.com</span><br><br>
-            <span th:text="${user.nickname}">우내</span><br><br>
-            <span th:text="${user.phoneNumber}">01056979712</span><br><br>
-            <span th:text="${user.username}">테스터
-                    </span><br><br>
-            <span th:text="${#strings.substringBefore(user.getCreatedAt(), 'T')}">2025-01-03</span><br><br>
-          </td>
-          <td style="vertical-align: top; text-align: center;">
-            <button class="btn btn-info"
-                    style="    width: 60%; padding-bottom: 0.3rem; margin-top: 15%;" id="update">
-              수정
-            </button>
-          </td>
-
-
-        </tr>
-      </table>
-
-      <div class="container-fluid pt-5">
-        <div class="row"
-             style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 100%;">
-          <div class="col-12 mb-0">
-
-            <table class="table" style="text-align: center;">
-              <tbody>
-              <tr th:each="post : ${postList}">
-                <td style="width: 55%; text-align: left" >
-                  <a th:href="@{/api/posts/detail(id=${post.id})}" th:text="${post.title}"></a>
-                </td>
-<!--                <td th:text="${post.author}" style="width: 10%;"></td>-->
-                <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}" style="width: 10%;"></td>
-              </tr>
-
-
-              </tbody>
-            </table>
-
+    <div class="col-12 mb-2">
+      <a href="/api/posts/create">
+        <span style="float: right;">게시글 작성</span>
+      </a>
     </div>
   </div>
 </div>
 
+<div class="container-fluid pt-1">
+  <div class="row"
+       style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">
+    <div class="col-12 mb-3">
+
+      <table class="table" style="text-align: center;">
+        <tbody>
+        <tr th:each="post : ${postList}">
+          <td style="width: 55%; text-align: left" >
+                <a th:href="@{/api/search/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+<!--            <a th:text = "${post.id}"></a>-->
+          </td>
+          <td th:text="${post.author}" style="width: 10%;"></td>
+          <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}" style="width: 10%;"></td>
+        </tr>
+
+
+        </tbody>
+      </table>
+
+      <!-- pagination -->
+      <ul class="pagination justify-content-center my-4">
+        <span th:each="page: ${pageList}">
+            <span th:switch="${page}">
+                <th:block th:case="${session.currentPage}">
+                    <li class="page-item active">
+                        <a class="page-link" href="#">[[${page}]]</a>
+                    </li>
+                </th:block>
+                <th:block th:case="*">
+                    <li class="page-item">
+<!--                        <a class="page-link"-->
+<!--                           th:href="@{/api/posts/list(p=${page},f=${field},q=${query})}">[[${page}]]</a>-->
+                    </li>
+                </th:block>
+            </span>
+        </span>
+      </ul>
+
+    </div>
+  </div>
+
+
+  <!-- </div> -->
 </div>
+
 
 <!-- Back to Top -->
 <a href="#" class="btn btn-secondary back-to-top"
@@ -188,6 +184,6 @@
 
 
 <!-- Template Javascript -->
-<script src="/js/user.js"></script>
+<script src="/js/home.js"></script>
 </body>
 </html>

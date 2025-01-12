@@ -10395,3 +10395,43 @@ a.text-dark:focus {
 .login button {
   font-size: small;
 }
+
+#contentBox {
+  font-size: large;
+  color: black;
+  /*overflow: scroll;*/
+  width: 100%;
+  /*height: 100%;*/
+  /*margin: 1rem;*/
+  max-width: 1275px;
+  max-height: 800px;
+  height: 100%;
+  overflow-y: auto;  /* 세로 스크롤 활성화 */
+  overflow-x: hidden; /* 가로 스크롤 비활성화 */
+  /*border: 1px solid #ddd; !* 테두리 추가 (선택사항) *!*/
+  padding: 10px;     /* 내부 여백 */
+  box-sizing: border-box; /* 여백 포함 크기 계산 */
+  background-color: #f9f9f9; /* 배경색 추가 */
+  word-wrap: break-word; /* 단어 단위로 줄바꿈 */
+  overflow-wrap: break-word; /* 긴 문자열 줄바꿈 */
+  white-space: normal; /* 줄바꿈 허용 */
+}
+
+#contentBox pre, code {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100%;
+  height: 100%;
+  max-height: 250px; /* 코드 블럭 최대 높이 */
+  overflow-y: auto;
+  overflow-x: auto; /* 가로 스크롤은 필요한 경우 활성화 */
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid #ddd;
+  /*margin: 0 0 10px; !* 블럭 간격 *!*/
+  margin: 1rem 0 1rem 0;
+}

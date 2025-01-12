@@ -58,12 +58,20 @@
     </a>
   </div>
   <div class="col-lg-6 col-6 text-left">
-    <form action="">
-      <div class="input-group">
+    <form action="/api/search/posts" method="get">
+      <div class="control-group" style="float: left;">
+        <select class="form-control" name="field">
+          <option value="TITLE">제목</option>
+          <option value="CONTENT">내용</option>
+          <option value="TITLE_CONTENT">제목+내용</option>
+        </select>
+      </div>
+      <div class="input-group" style="width: 80%;">
         <input
             type="text"
             class="form-control"
             placeholder="검색창"
+            name="q"
         />
         <div class="input-group-append">
                 <span class="input-group-text bg-transparent text-primary" style="cursor: pointer;"
@@ -91,21 +99,21 @@
         >
           <div class="navbar-nav mr-auto py-0">
             <a href="index.html" class="nav-item nav-link active">홈</a>
-            <a href="/api/posts/list" class="nav-item nav-link">게시판</a>
-            <a href="detail.html" class="nav-item nav-link">메뉴1</a>
-            <div class="nav-item dropdown">
-              <a
-                  href="#"
-                  class="nav-link dropdown-toggle"
-                  data-toggle="dropdown"
-              >드롭다운</a
-              >
-              <div class="dropdown-menu rounded-0 m-0">
-                <a href="cart.html" class="dropdown-item">하위1</a>
-                <a href="checkout.html" class="dropdown-item">하위2</a>
-              </div>
-            </div>
-            <a href="contact.html" class="nav-item nav-link">메뉴2</a>
+            <a href="/api/posts/list" class="nav-item nav-link">자유게시판</a>
+            <a href="/api/posts/list" class="nav-item nav-link">ES게시판</a>
+<!--            <div class="nav-item dropdown">-->
+<!--              <a-->
+<!--                  href="#"-->
+<!--                  class="nav-link dropdown-toggle"-->
+<!--                  data-toggle="dropdown"-->
+<!--              >드롭다운</a-->
+<!--              >-->
+<!--              <div class="dropdown-menu rounded-0 m-0">-->
+<!--                <a href="cart.html" class="dropdown-item">하위1</a>-->
+<!--                <a href="checkout.html" class="dropdown-item">하위2</a>-->
+<!--              </div>-->
+<!--            </div>-->
+            <a th:if="${username != 'Guest' && role == 'ADMIN'}" href="contact.html" class="nav-item nav-link">사용자 관리</a>
           </div>
         </div>
       </nav>
@@ -119,199 +127,219 @@
   <div class="row"
        style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">
     <div class="col-9 mb-0">
-      <a href="/api/posts/create">
+<!--      <a href=/api/search/posts/recent">-->
+      <a href="/api/posts/list">
         <span style="float: right;">전체보기</span>
       </a>
     </div>
   </div>
 </div>
 
-<div class="container-fluid pt-1">
-  <!-- <div class="container"> -->
-  <div class="row"
-       style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">
+
+<div class="container-fluid pt-3">
+  <div class="row" style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">
     <div class="col-9 mb-3">
-
       <table class="table" style="text-align: center;">
-        <tbody>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-
-        <!-- 아래 지우기 -->
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        <tr>
-          <!-- <th scope="row"></th> -->
-          <td style=" width: 5%;">
-            <img src="/img/undraw_profile.svg" style="height: 54px;">
-          </td>
-          <td style="width: 55%; text-align: left;">
-            <a href="#"><span>제목 [22]</span> </a>
-
-          </td>
-          <td style="width: 10%;">게시자</td>
-          <td style="width: 10%;">등록 날짜</td>
-        </tr>
-        </tbody>
+        <tbody id="post-list"></tbody>
       </table>
+</div>
+      <!-- Pagination -->
+    <div>
+      <ul class="pagination justify-content-center my-4" id="pagination"></ul>
+    </div>
+<!--  </div>-->
+<!--  </div>-->
+
+
+
+
+<!--<div class="container-fluid pt-1">-->
+<!--  &lt;!&ndash; <div class="container"> &ndash;&gt;-->
+<!--  <div class="row"-->
+<!--       style="justify-content: space-between; flex-wrap: nowrap; margin: auto; width: 70%;">-->
+<!--    <div class="col-9 mb-3">-->
+
+<!--      <table class="table" style="text-align: center;">-->
+<!--        <tbody>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+
+<!--        &lt;!&ndash; 아래 지우기 &ndash;&gt;-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--          &lt;!&ndash; <th scope="row"></th> &ndash;&gt;-->
+<!--          <td style=" width: 5%;">-->
+<!--            <img src="/img/undraw_profile.svg" style="height: 54px;">-->
+<!--          </td>-->
+<!--          <td style="width: 55%; text-align: left;">-->
+<!--            <a href="#"><span>제목 [22]</span> </a>-->
+
+<!--          </td>-->
+<!--          <td style="width: 10%;">게시자</td>-->
+<!--          <td style="width: 10%;">등록 날짜</td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--      </table>-->
 
       <!-- pagination -->
-      <ul class="pagination justify-content-center my-4">
-						<span th:if="${session.currentBookEsPage gt 10}">
-							<li class="page-item"><a class="page-link"
-                                       th:href="@{/bookEs/list(p=${startPage-1},f=${field},q=${query})}"><i
-                  class="fa-solid fa-less-than"></i></a></li>
-						</span>
-        <span th:if="${session.currentBookEsPage le 10}">
-							<li class="page-item"><a class="page-link" href="#"><i
-                  class="fa-solid fa-less-than"></i></a></li>
-						</span>
-        <span th:each="page: ${pageList}">
-							<span th:switch="${page}">
-								<th:block th:case="${session.currentBookEsPage}">
-									<li class="page-item active">
-										<a class="page-link" href="#">[[${page}]]</a>
-									</li>
-								</th:block>
-								<th:block th:case="*">
-									<li class="page-item">
-										<a class="page-link" th:href="@{/bookEs/list(p=${page},f=${field},q=${query})}">[[${page}]]</a>
-									</li>
-								</th:block>
-							</span>
-						</span>
-        <span th:if="${totalPages gt endPage}">
-							<li class="page-item"><a class="page-link"
-                                       th:href="@{/bookEs/list(p=${endPage+1},f=${field},q=${query})}"><i
-                  class="fa-solid fa-greater-than"></i></a></li>
-						</span>
-        <span th:if="${totalPages eq endPage}">
-							<li class="page-item"><a class="page-link" href="#"><i
-                  class="fa-solid fa-greater-than"></i></a></li>
-						</span>
-      </ul>
+<!--      <ul class="pagination justify-content-center my-4">-->
+<!--						<span th:if="${session.currentBookEsPage gt 10}">-->
+<!--							<li class="page-item"><a class="page-link"-->
+<!--                                       th:href="@{/bookEs/list(p=${startPage-1},f=${field},q=${query})}"><i-->
+<!--                  class="fa-solid fa-less-than"></i></a></li>-->
+<!--						</span>-->
+<!--        <span th:if="${session.currentBookEsPage le 10}">-->
+<!--							<li class="page-item"><a class="page-link" href="#"><i-->
+<!--                  class="fa-solid fa-less-than"></i></a></li>-->
+<!--						</span>-->
+<!--        <span th:each="page: ${pageList}">-->
+<!--							<span th:switch="${page}">-->
+<!--								<th:block th:case="${session.currentBookEsPage}">-->
+<!--									<li class="page-item active">-->
+<!--										<a class="page-link" href="#">[[${page}]]</a>-->
+<!--									</li>-->
+<!--								</th:block>-->
+<!--								<th:block th:case="*">-->
+<!--									<li class="page-item">-->
+<!--										<a class="page-link" th:href="@{/bookEs/list(p=${page},f=${field},q=${query})}">[[${page}]]</a>-->
+<!--									</li>-->
+<!--								</th:block>-->
+<!--							</span>-->
+<!--						</span>-->
+<!--        <span th:if="${totalPages gt endPage}">-->
+<!--							<li class="page-item"><a class="page-link"-->
+<!--                                       th:href="@{/bookEs/list(p=${endPage+1},f=${field},q=${query})}"><i-->
+<!--                  class="fa-solid fa-greater-than"></i></a></li>-->
+<!--						</span>-->
+<!--        <span th:if="${totalPages eq endPage}">-->
+<!--							<li class="page-item"><a class="page-link" href="#"><i-->
+<!--                  class="fa-solid fa-greater-than"></i></a></li>-->
+<!--						</span>-->
+<!--      </ul>-->
 
-    </div>
+<!--    </div>-->
 
     <div class="col-3 mb-3" style="left: 3%; height: 100%;">
       <!-- 로그인 상태 확인 -->
       <!--/*@thymesVar id="cookies" type=""*/-->
+      <input type="hidden" th:value="${username}" id="esLoad">
       <div th:if="${username != 'Guest'}">
         <div class="user-info">
           <table class="userInfoTable" style="border: 1px solid #dedede" ; width="100%">
@@ -344,8 +372,8 @@
       </div>
 
       <!-- 비로그인 상태 -->
-      <div th:if="${username == 'Guest' || username == '' || username == null}">
-        <div>
+      <div >
+        <div th:if="${username == 'Guest' || username == '' || username == null}">
           <form action="/api/users/custom-login" method="post">
             <div class="login">
               <div class="group">
@@ -396,7 +424,7 @@
           </form>
         </div>
       </div>
-
+<!--    </div>-->
 
       <div th:style="'margin: ' + (${username != 'Guest'} ? '20%' : '70%') + ' 0 10% 0;'">
         <span style="margin: 3%; color: black; font-size: medium;">트랜드 랭킹</span>
@@ -407,7 +435,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">1</span>
-              @키워드
+              생성형 AI
             </a>
           </td>
         </tr>
@@ -416,7 +444,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">2</span>
-              @키워드
+              AI 툴
             </a>
           </td>
         </tr>
@@ -424,7 +452,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">3</span>
-              @키워드
+              로우코드
             </a>
           </td>
         </tr>
@@ -432,7 +460,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">4</span>
-              @키워드
+              포트폴리오 예제
             </a>
           </td>
         </tr>
@@ -440,7 +468,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">5</span>
-              @키워드
+              블록체인
             </a>
           </td>
         </tr>
@@ -448,7 +476,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">6</span>
-              @키워드
+              GPT API
             </a>
           </td>
         </tr>
@@ -456,7 +484,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">7</span>
-              @키워드
+              Copilot
             </a>
           </td>
         </tr>
@@ -464,7 +492,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">8</span>
-              @키워드
+              Web3
             </a>
           </td>
         </tr>
@@ -472,7 +500,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">9</span>
-              @키워드
+              인공지능
             </a>
           </td>
         </tr>
@@ -480,7 +508,7 @@
           <td>
             <a href="" style="text-decoration:none;  color: inherit;">
               <span class="badge bg-warning" style="vertical-align: middle;">10</span>
-              @키워드
+              NFT
             </a>
           </td>
         </tr>
@@ -489,6 +517,7 @@
     </div>
     <!-- </div> -->
   </div>
+
 
 
   <!-- Back to Top -->

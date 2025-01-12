@@ -61,6 +61,7 @@ public class UserController {
         model.addAttribute("username", user.getNickname());
         model.addAttribute("id", user.getId());
         model.addAttribute("email", user.getEmail());
+        model.addAttribute("role", user.getRole());
         return "main";
     }
 
@@ -84,7 +85,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerProc(@Validated @RequestBody RegisterDto registerDto, Model model) { // @RequestBody
+    public String registerProc(@Validated RegisterDto registerDto, Model model) { // @RequestBody
         Map<String, Object> messagemap = new HashMap<>();
         String hashedPwd = BCrypt.hashpw(registerDto.getPwd(), BCrypt.gensalt());
         if (registerDto.getEmail().equals("asd@naver.com")) {
@@ -118,7 +119,8 @@ public class UserController {
                          Model model) {
         Map<String, Object> messagemap = new HashMap<>();
         model.addAttribute("user", user);
-        Page<Post> posts = postService.getPagedPostsByUserId(page, user);
+        Long id = user.getId();
+        Page<Post> posts = postService.getPagedPostsByUserId(page, id);
         
         List<PostListDto> postList = posts.getContent().stream().map(post -> {
             return new PostListDto(
@@ -136,7 +138,6 @@ public class UserController {
         List<Integer> pageList = new ArrayList<>();
         for (int i = startPage; i <= endPage; i++)
             pageList.add(i);
-
         model.addAttribute("postList", postList);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", page);
